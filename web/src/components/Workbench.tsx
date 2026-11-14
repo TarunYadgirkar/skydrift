@@ -23,6 +23,7 @@ const DEFAULT_HALF = 32;
 const DEFAULT_DETECTOR = 3;
 const BLINK_INTERVAL_MS = 650;
 const FAST_STAR_MAS_YR = 150;
+const GAIA_TIMEOUT_MS = 20_000;
 const EMPTY_GAIA: { stars: GaiaStar[]; note: string | null } = { stars: [], note: null };
 const DATE_FORMAT = new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" });
 
@@ -66,7 +67,7 @@ export function Workbench() {
   const [selection, setSelection] = useState<{ raDeg: number; decDeg: number } | null>(null);
   const [spectrum, setSpectrum] = useState<SpectrumPoint[]>([]);
   const [gaiaResult, setGaiaResult] = useState<{ session: Session; stars: GaiaStar[]; note: string | null } | null>(null);
-  const [moversResult, setMoversResult] = useState<{ frames: (Float32Array | null)[]; report: MoverReport } | null>(null);
+  const [moversResult, setMoversResult] = useState<{ frames: (Float32Array | null)[]; report: MoverReport | null } | null>(null);
   const [selectedMover, setSelectedMover] = useState<string | null>(null);
 
   const start = useCallback(
@@ -99,7 +100,9 @@ export function Workbench() {
   const shownEpoch = available[epoch] ? epoch : Math.max(firstAvailable, 0);
   const isGaiaSettled = gaiaResult !== null && gaiaResult.session === session;
   const gaia = isGaiaSettled ? gaiaResult : EMPTY_GAIA;
-  const movers = moversResult && moversResult.frames === frames ? moversResult.report : null;
+  const moversSettled = moversResult && moversResult.frames === frames ? moversResult : null;
+  const movers = moversSettled?.report ?? null;
+  const passRange = useMemo(() => deepestPassRange(frames), [frames]);
 
   useEffect(() => {
     if (!playing || mode === "add") return;
@@ -129,7 +132,7 @@ export function Workbench() {
     if (!session) return;
     const controller = new AbortController();
     const radiusDeg = (session.grid.size * session.grid.scaleArcsec) / 3600 / 2 * 1.5;
-    fetchGaiaStars(session.grid.raDeg, session.grid.decDeg, radiusDeg, controller.signal)
+    fetchGaiaStars(session.grid.raDeg, session.grid.decDeg, radiusDeg, AbortSignal.any([controller.signal, AbortSignal.timeout(GAIA_TIMEOUT_MS)]))
       .then((stars) => setGaiaResult({ session, stars, note: null }))
       .catch((error: unknown) => {
         if (!controller.signal.aborted) setGaiaResult({ session, stars: [], note: error instanceof Error ? error.message : null });
@@ -138,10 +141,9 @@ export function Workbench() {
   }, [session]);
 
   useEffect(() => {
-    const range = session && isGaiaSettled ? deepestPassRange(frames) : null;
-    if (!session || !range) return;
+    if (!session || !isGaiaSettled || !passRange) return;
     let cancelled = false;
-    const [firstPass, lastPass] = range;
+    const [firstPass, lastPass] = passRange;
     const first = frames[firstPass];
     const last = frames[lastPass];
     if (!first || !last) return;
@@ -149,11 +151,14 @@ export function Workbench() {
       .then((report) => {
         if (!cancelled) setMoversResult({ frames, report });
       })
-      .catch((error: unknown) => console.error(error));
+      .catch((error: unknown) => {
+        console.error(error);
+        if (!cancelled) setMoversResult({ frames, report: null });
+      });
     return () => {
       cancelled = true;
     };
-  }, [session, frames, isGaiaSettled, gaia.stars]);
+  }, [session, frames, passRange, isGaiaSettled, gaia.stars]);
 
   const view = useMemo(() => {
     const frame = frames[shownEpoch] ?? null;
@@ -182,7 +187,7 @@ export function Workbench() {
       .map((candidate): Marker => ({ id: candidate.id, kind: "candidate", raDeg: candidate.raDeg, decDeg: candidate.decDeg, motionArcsec: candidate.motionArcsec })),
     ...(selection ? [{ id: "selection", kind: "selection" as const, ...selection }] : []),
   ];
-  const moversNote = session && session.epochs.length < 2 ? "SPHEREx has covered this spot only once so far, so there is nothing to compare yet." : gaia.note;
+  const moversNote = moversNoteFor(session, band !== undefined && passRange === null, moversSettled !== null && movers === null, gaia.note);
   const busy = ["resolving", "searching", "loading"].includes(state.status);
   const caption = session
     ? `${formatRa(session.grid.raDeg)}  ${formatDec(session.grid.decDeg)} · ${fovArcmin(session.halfSizePx)}′ field · ${
@@ -382,4 +387,11 @@ function PlatePlaceholder({ status, error, progress }: PlaceholderProps) {
       ) : null}
     </div>
   );
+}
+
+function moversNoteFor(session: Session | null, hasOnePass: boolean, hasFailed: boolean, gaiaNote: string | null): string | null {
+  if (session && session.epochs.length < 2) return "SPHEREx has covered this spot only once so far, so there is nothing to compare yet.";
+  if (hasOnePass) return "Only one pass has usable images in this band, so there is nothing to compare. Try another band.";
+  if (hasFailed) return "The mover detector could not run. Reload the page to try again.";
+  return gaiaNote;
 }

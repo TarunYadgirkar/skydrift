@@ -51,6 +51,7 @@ export interface MoverReport {
 function noiseSigma(frame: Float32Array): number {
   const finite: number[] = [];
   for (const value of frame) if (Number.isFinite(value)) finite.push(value);
+  if (finite.length === 0) return Infinity;
   const center = median([...finite]);
   return 1.4826 * median(finite.map((value) => Math.abs(value - center))) || 1e-6;
 }
@@ -59,6 +60,7 @@ function noiseSigma(frame: Float32Array): number {
 export function deepestPassRange(frames: (Float32Array | null)[]): [number, number] | null {
   const noise = frames.map((frame) => (frame ? noiseSigma(frame) : Infinity));
   const limit = Math.min(...noise) * SHALLOW_PASS_NOISE_RATIO;
+  if (!Number.isFinite(limit)) return null;
   const deepFirst = noise.findIndex((value) => value <= limit);
   const deepLast = noise.findLastIndex((value) => value <= limit);
   if (deepLast > deepFirst) return [deepFirst, deepLast];
@@ -175,7 +177,7 @@ function matchGaia(stars: GaiaStar[], raDeg: number, decDeg: number, year: numbe
  * source when it sits right on it. A bright star keeps the wide radius, because its saturated core shifts the centroid.
  */
 function isPassingNeighbour(match: GaiaMatch, speedArcsecYr: number): boolean {
-  const isFaint = match.star.gMag > GAIA_BRIGHT_MAG;
+  const isFaint = !(match.star.gMag <= GAIA_BRIGHT_MAG);
   return isFaint && match.distanceArcsec > GAIA_SAME_SOURCE_ARCSEC && disagreesWithGaia(speedArcsecYr, match.star);
 }
 

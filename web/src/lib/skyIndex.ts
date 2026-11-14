@@ -2,6 +2,7 @@ import { DETECTOR_SIZE } from "./spherex";
 
 const DEG = Math.PI / 180;
 const EPOCH_GAP_DAYS = 45;
+const MAX_EPOCH_SPAN_DAYS = 45;
 const FOOTPRINT_RADIUS_DEG = 3;
 const INDEX_BASE = process.env.NEXT_PUBLIC_INDEX_BASE ?? "/skyindex";
 
@@ -123,8 +124,13 @@ export async function findExposures(raDeg: number, decDeg: number, halfSizePx: n
   }
   found.sort((p, q) => p.mjd - q.mjd);
   let epoch = 0;
+  let epochStart = found.length ? found[0].mjd : 0;
   return found.map((exposure, i) => {
-    if (i > 0 && exposure.mjd - found[i - 1].mjd > EPOCH_GAP_DAYS) epoch++;
+    const gap = i > 0 ? exposure.mjd - found[i - 1].mjd : 0;
+    if (gap > EPOCH_GAP_DAYS || exposure.mjd - epochStart >= MAX_EPOCH_SPAN_DAYS) {
+      epoch++;
+      epochStart = exposure.mjd;
+    }
     return { ...exposure, epoch };
   });
 }

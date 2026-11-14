@@ -12,6 +12,7 @@ const MIN_SHIFT_PX = 0.5;
 const STATIC_SHIFT_PX = 1;
 const GAIA_MATCH_ARCSEC = 9;
 const CUBIC_A = -0.75;
+const DUPLICATE_RADIUS_PX = 5;
 
 export interface DetectedSource {
   x: number;
@@ -69,6 +70,13 @@ export function detectSources(frame: Float32Array, size: number): DetectedSource
     }
   }
   return sources;
+}
+
+function dropDuplicates(sources: DetectedSource[]): DetectedSource[] {
+  const brightestFirst = [...sources].sort((p, q) => q.snr - p.snr);
+  return brightestFirst.filter(
+    (source, i) => !brightestFirst.slice(0, i).some((other) => Math.hypot(other.x - source.x, other.y - source.y) < DUPLICATE_RADIUS_PX),
+  );
 }
 
 function isLocalMaximum(at: (col: number, row: number) => number, col: number, row: number, peak: number): boolean {
@@ -151,7 +159,7 @@ export async function findMovers(
 ): Promise<MoverReport> {
   const model = await loadMoverModel();
   const baselineYears = (lastMjd - firstMjd) / 365.25;
-  const sources = detectSources(first, grid.size);
+  const sources = dropDuplicates(detectSources(first, grid.size));
   const raw = sources.map((source) => {
     const [logit, dx, dy] = model.predict(
       buildInput(sampleStamp(first, grid.size, source.x, source.y), sampleStamp(last, grid.size, source.x, source.y)),

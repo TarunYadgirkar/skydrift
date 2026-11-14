@@ -7,6 +7,7 @@ INDEX_DIR = Path(__file__).resolve().parents[2] / "index"
 DETECTOR_SIZE = 2040
 MAX_FOOTPRINT_RADIUS_DEG = 3.0
 EPOCH_GAP_DAYS = 45.0
+MAX_EPOCH_SPAN_DAYS = 45.0
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,12 @@ def _gnomonic(ra: float, dec: float, ra0: np.ndarray, dec0: np.ndarray) -> tuple
 
 
 def _epoch_labels(sorted_mjd: np.ndarray) -> np.ndarray:
-    if len(sorted_mjd) == 0:
-        return np.zeros(0, dtype=int)
-    return np.concatenate([[0], np.cumsum(np.diff(sorted_mjd) > EPOCH_GAP_DAYS)])
+    labels = np.zeros(len(sorted_mjd), dtype=int)
+    epoch = 0
+    start = sorted_mjd[0] if len(sorted_mjd) else 0.0
+    for i in range(1, len(sorted_mjd)):
+        if sorted_mjd[i] - sorted_mjd[i - 1] > EPOCH_GAP_DAYS or sorted_mjd[i] - start >= MAX_EPOCH_SPAN_DAYS:
+            epoch += 1
+            start = sorted_mjd[i]
+        labels[i] = epoch
+    return labels

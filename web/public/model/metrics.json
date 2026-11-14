@@ -1,12 +1,12 @@
 {
-  "recall_at_1pct_false_alarms": 0.9424183964729309,
-  "recall_below_1px_shift": 0.7876105904579163,
-  "median_shift_error_px": 0.3924384117126465,
-  "threshold": 0.7483023405075073,
-  "accuracy": 0.972000002861023,
-  "star_pairs": 1307,
-  "fields": 73,
-  "held_out_pairs": 250,
+  "recall_at_1pct_false_alarms": 0.9495245218276978,
+  "recall_below_1px_shift": 0.7996987700462341,
+  "median_shift_error_px": 0.24326476454734802,
+  "threshold": 0.9776511788368225,
+  "accuracy": 0.9742783308029175,
+  "star_pairs": 6740,
+  "fields": 400,
+  "held_out_pairs": 1351,
   "layers": [
     {
       "name": "features.0.weight",

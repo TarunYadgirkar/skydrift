@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skydrift demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --surface:#e9edf0; --panel:#f7f9fa; --ink:#14202b; --muted:#55626d; --line:#cdd5db; --accent:#0b6e99; --mover:#f2a900; --good:#1e7f54; }
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: "IBM Plex Sans", sans-serif; color: var(--ink); background: var(--surface); }
+  .slide { width: 1280px; height: 720px; padding: 56px 64px; display: flex; flex-direction: column; gap: 28px; page-break-after: always; position: relative; overflow: hidden; }
+  h1 { font-family: "Bricolage Grotesque", sans-serif; font-size: 112px; line-height: 0.95; letter-spacing: -0.03em; }
+  h2 { font-family: "Bricolage Grotesque", sans-serif; font-size: 44px; line-height: 1.05; letter-spacing: -0.02em; max-width: 22ch; text-wrap: balance; }
+  p, li { font-size: 22px; line-height: 1.45; }
+  .muted { color: var(--muted); }
+  .mono { font-family: "IBM Plex Mono", monospace; }
+  .row { display: flex; gap: 40px; flex: 1; min-height: 0; }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .shot { border-radius: 10px; box-shadow: 0 14px 36px -14px rgb(20 32 43 / .5), 0 0 0 1px rgb(20 32 43 / .25); overflow: hidden; background: var(--panel); }
+  .shot img { display: block; width: 100%; }
+  .panel { background: var(--panel); border-radius: 10px; padding: 22px 24px; box-shadow: 0 1px 2px rgb(20 32 43 / .08), 0 0 0 1px rgb(20 32 43 / .06); }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 38px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 17px; color: var(--muted); line-height: 1.3; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+  .foot { position: absolute; left: 64px; right: 64px; bottom: 26px; display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); font-family: "IBM Plex Mono", monospace; }
+  ul { padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .flow { display: flex; flex-direction: column; gap: 8px; }
+  .step { display: flex; gap: 16px; align-items: baseline; background: var(--panel); border-radius: 8px; padding: 10px 18px; box-shadow: 0 0 0 1px rgb(20 32 43 / .06); }
+  .step b { font-size: 19px; min-width: 190px; }
+  .step span { font-size: 17px; color: var(--muted); line-height: 1.35; }
+  .pill { display: inline-block; background: rgb(30 127 84 / .13); color: var(--good); font-size: 16px; font-weight: 600; border-radius: 999px; padding: 4px 12px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<section class="slide" style="justify-content: space-between;">
+  <div class="mono muted" style="font-size:18px">NASA Space Apps Challenge 2026 · San Francisco · Challenge: Planet X and SPHEREx</div>
+  <div style="display:flex; gap:48px; align-items:flex-end;">
+    <div style="flex:1.1; display:flex; flex-direction:column; gap:22px;">
+      <h1>Skydrift</h1>
+      <p style="font-size:30px; max-width:24ch; line-height:1.25;">Blink NASA SPHEREx images of any patch of sky and spot what moved.</p>
+      <p class="mono" style="font-size:20px;"><a href="https://skydrift-steel.vercel.app">skydrift-steel.vercel.app</a></p>
+    </div>
+    <div class="shot" style="flex:1;"><img src="barnard-subtract.png" alt="Skydrift showing Barnard's Star as a blue and orange pair after subtracting two survey passes"></div>
+  </div>
+  <div class="mono muted" style="font-size:18px">Team Skydrift · Tarun Yadgirkar</div>
+</section>
+
+<section class="slide">
+  <h2>Pluto was found by flipping between two photographs.</h2>
+  <div class="row">
+    <div class="col">
+      <p>Things that are close to us move against the background stars: asteroids, comets, nearby stars, brown dwarfs, maybe an undiscovered planet. The way to find them is to compare images taken at different times.</p>
+      <p>SPHEREx has been photographing the whole sky in 102 infrared colours since 2025. That is more than a billion objects, far too many for any team to check.</p>
+      <p><b>The challenge:</b> a public web tool where anyone enters a position and watches that patch of sky change over time.</p>
+    </div>
+    <div class="col">
+      <div class="panel stats">
+        <div class="stat"><b>1,628,230</b><span>SPHEREx exposures Skydrift can search</span></div>
+        <div class="stat"><b>102</b><span>infrared channels per sky position</span></div>
+        <div class="stat"><b>18 months</b><span>of sky, April 2025 to October 2026</span></div>
+        <div class="stat"><b>3 to 4</b><span>survey passes over most of the sky so far</span></div>
+      </div>
+      <p class="muted" style="font-size:18px;">On hackathon weekend the archive's search service was down. Skydrift does not use it.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>2 / 7</span></div>
+</section>
+
+<section class="slide">
+  <h2>Type a name. Watch the sky move.</h2>
+  <div class="row">
+    <div class="shot" style="flex:1.5; align-self:flex-start;"><img src="barnard-last.png" alt="Skydrift on Barnard's Star with the detector's result"></div>
+    <div class="col">
+      <ul>
+        <li><b>Blink, subtract or add</b> survey passes</li>
+        <li><b>Six wavelength bands</b>, 0.75 to 5 µm</li>
+        <li><b>Field of view</b> from 3.4′ to 9.2′</li>
+        <li><b>Movers flagged</b> with speed and direction</li>
+        <li><b>Gaia cross-check</b> on every flagged source</li>
+        <li><b>Link or embed</b> any view by URL</li>
+      </ul>
+      <div class="panel">
+        <p style="font-size:19px;">Barnard's Star, the fastest-moving star in the sky.</p>
+        <p class="mono" style="font-size:24px; margin-top:6px;">Skydrift: 10.1″/yr north</p>
+        <p class="mono muted" style="font-size:24px;">Gaia: 10.4″/yr north</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>3 / 7</span></div>
+</section>
+
+<section class="slide">
+  <h2>NASA's data, read straight from the cloud.</h2>
+  <div class="row">
+    <div class="col" style="flex:1.25;">
+      <div class="flow">
+        <div class="step"><b>Own sky index</b><span>The pointing of every SPHEREx Level 2 image, read from its FITS header in NASA's public bucket. Stored as 4,584 small files, one per sky cell.</span></div>
+        <div class="step"><b>Byte-range cutouts</b><span>Each image is 65 MB. Skydrift requests only the pixel rows it needs, about 1 second for 24 exposures.</span></div>
+        <div class="step"><b>Stack in the browser</b><span>Undo detector distortion, resample north-up at half-pixel steps, median-stack each survey pass.</span></div>
+        <div class="step"><b>Measure</b><span>Blink and difference images, per-exposure photometry for spectra, and the mover detector.</span></div>
+        <div class="step"><b>Cross-check</b><span>Gaia DR3 positions and proper motions for every flagged source.</span></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="panel">
+        <p><b>No archive query service needed.</b> The tool kept working while the usual search was offline.</p>
+      </div>
+      <div class="panel">
+        <p><b>New data release?</b> One command. The indexer skips the weeks it has already read.</p>
+      </div>
+      <div class="panel">
+        <p><b>NASA data used:</b> SPHEREx Level 2 spectral images (DR1, QR3) and spectral WCS calibration, from NASA/IPAC IRSA.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>4 / 7</span></div>
+</section>
+
+<section class="slide">
+  <h2>A detector trained on real stars, checked against real motion.</h2>
+  <div class="row">
+    <div class="col">
+      <p>A small neural network looks at each source in the first and last survey pass and answers: did it move, and by how much?</p>
+      <p><b>Training:</b> 6,740 real SPHEREx star pairs. Half are slid by a known sub-pixel offset, so every fake mover has a real point-spread function, real noise and real brightness changes.</p>
+      <p><b>Guard rail:</b> if Gaia says a flagged star is still, Skydrift says so and drops it. Glare from a bright neighbour is the usual cause.</p>
+      <p class="muted" style="font-size:18px;">The network is about 94,000 weights and runs in the browser.</p>
+    </div>
+    <div class="col">
+      <div class="panel stats">
+        <div class="stat"><b>95%</b><span>of slid stars caught at a 1% false-alarm rate, on 1,351 pairs it never saw</span></div>
+        <div class="stat"><b>0.7″</b><span>median error in measured shift</span></div>
+        <div class="stat"><b>31 of 41</b><span>real Gaia fast movers recovered, of those that shifted at least half a pixel</span></div>
+        <div class="stat"><b>11%</b><span>median difference from Gaia's speed for the stars it recovered</span></div>
+      </div>
+      <p class="muted" style="font-size:18px;">Of 2,130 other sources in those fields, 10 were flagged (0.5%), before the Gaia check. Stars that moved less than half a pixel are below what 18 months of SPHEREx can show.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>5 / 7</span></div>
+</section>
+
+<section class="slide">
+  <h2>Click any source for its spectrum.</h2>
+  <div class="row">
+    <div class="shot" style="flex:1.5; align-self:flex-start;"><img src="epsind-spectrum.png" alt="Skydrift on Epsilon Indi B with the spectrum panel"></div>
+    <div class="col">
+      <p>Each SPHEREx exposure sees a source at a different wavelength. Skydrift measures the source in every exposure and plots flux against wavelength, coloured by survey pass.</p>
+      <p>A star that changes brightness shows up as passes that do not overlap. A cold brown dwarf shows up as a spectrum that only rises past 4 µm.</p>
+      <div class="panel">
+        <p style="font-size:19px;">Epsilon Indi B, a pair of brown dwarfs 12 light-years away.</p>
+        <p class="mono" style="font-size:24px; margin-top:6px;">Skydrift: 4.2″/yr southeast</p>
+        <p class="mono muted" style="font-size:24px;">Gaia: 4.7″/yr southeast</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>6 / 7</span></div>
+</section>
+
+<section class="slide">
+  <h2>Every new SPHEREx pass makes it sharper.</h2>
+  <div class="row">
+    <div class="col">
+      <p><b>Today</b> one pair of passes shows motion faster than about 1.5″ per year. Each new pass lengthens the baseline, so slower and fainter movers come into reach.</p>
+      <p><b>For volunteers:</b> a flagged source that Gaia does not list is exactly what projects like Backyard Worlds ask people to look at. Skydrift hands them a link to it.</p>
+      <p><b>Next:</b> combine all six bands for fainter sources, track a mover across every pass instead of two, and overlay WISE positions for a 15-year baseline.</p>
+    </div>
+    <div class="col">
+      <div class="panel">
+        <p class="mono" style="font-size:22px;"><a href="https://skydrift-steel.vercel.app">skydrift-steel.vercel.app</a></p>
+        <p class="mono" style="font-size:22px; margin-top:8px;"><a href="https://github.com/TarunYadgirkar/skydrift">github.com/TarunYadgirkar/skydrift</a></p>
+      </div>
+      <div class="panel">
+        <p style="font-size:18px;"><b>Data:</b> NASA SPHEREx (NASA/IPAC IRSA), ESA Gaia DR3, CDS Sesame.</p>
+        <p style="font-size:18px; margin-top:8px;"><b>AI use:</b> Claude assisted with writing and reviewing the code. The mover detector was trained for this project on SPHEREx data.</p>
+      </div>
+      <p class="muted" style="font-size:18px;">Team Skydrift · Tarun Yadgirkar · Planet X and SPHEREx</p>
+    </div>
+  </div>
+  <div class="foot"><span>Skydrift</span><span>7 / 7</span></div>
+</section>
+
+</body>
+</html>

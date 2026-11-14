@@ -1,0 +1,1131 @@
+{
+ "stars": 140,
+ "recovered": 40,
+ "resolvable_stars": 41,
+ "resolvable_recovered": 31,
+ "median_speed_error_fraction": 0.10747244142128143,
+ "bystanders_checked": 2130,
+ "bystanders_flagged": 10,
+ "results": [
+  {
+   "g": 12.562663,
+   "gaia_arcsec_yr": 1.4330832358470733,
+   "measured_arcsec_yr": 1.4077401335890218,
+   "baseline_yr": 1.0346407436017,
+   "expected_shift_px": 0.48218741618860045,
+   "detected": false
+  },
+  {
+   "g": 11.694209,
+   "gaia_arcsec_yr": 1.1575411088349303,
+   "measured_arcsec_yr": 1.4151945504753844,
+   "baseline_yr": 0.993516805142442,
+   "expected_shift_px": 0.3739956241530795,
+   "detected": false
+  },
+  {
+   "g": 10.839232,
+   "gaia_arcsec_yr": 1.3293338257597085,
+   "measured_arcsec_yr": 1.3351623308385014,
+   "baseline_yr": 1.0004421894994027,
+   "expected_shift_px": 0.43249484332314153,
+   "detected": false
+  },
+  {
+   "g": 13.959662,
+   "gaia_arcsec_yr": 1.1779920945865752,
+   "measured_arcsec_yr": 1.0043182776355457,
+   "baseline_yr": 1.0065302975146462,
+   "expected_shift_px": 0.38558853119808995,
+   "detected": false
+  },
+  {
+   "g": 13.600672,
+   "gaia_arcsec_yr": 1.5706037219937115,
+   "measured_arcsec_yr": 1.438333202807602,
+   "baseline_yr": 0.9941160545001045,
+   "expected_shift_px": 0.5077601220460382,
+   "detected": false
+  },
+  {
+   "g": 12.103519,
+   "gaia_arcsec_yr": 1.179276906469618,
+   "measured_arcsec_yr": 0.11306832862061868,
+   "baseline_yr": 0.4546451087031138,
+   "expected_shift_px": 0.17435852921396788,
+   "detected": false
+  },
+  {
+   "g": 13.197576,
+   "gaia_arcsec_yr": 1.3789725207171017,
+   "measured_arcsec_yr": 1.5630519633705502,
+   "baseline_yr": 0.9864275847404644,
+   "expected_shift_px": 0.4423598481412815,
+   "detected": true
+  },
+  {
+   "g": 12.70625,
+   "gaia_arcsec_yr": 1.2106081701928224,
+   "measured_arcsec_yr": 0.9449256310378485,
+   "baseline_yr": 0.9859071282739544,
+   "expected_shift_px": 0.38814543887472913,
+   "detected": false
+  },
+  {
+   "g": 14.5433,
+   "gaia_arcsec_yr": 1.0951649097493603,
+   "measured_arcsec_yr": 1.471345497415457,
+   "baseline_yr": 0.9985961876950434,
+   "expected_shift_px": 0.35565122073921873,
+   "detected": false
+  },
+  {
+   "g": 11.171621,
+   "gaia_arcsec_yr": 1.0776575925361558,
+   "measured_arcsec_yr": 0.11390310842004364,
+   "baseline_yr": 0.3945101990119988,
+   "expected_shift_px": 0.13825915814576595,
+   "detected": false
+  },
+  {
+   "g": 11.493313,
+   "gaia_arcsec_yr": 1.0000943834832574,
+   "measured_arcsec_yr": 1.2334074121651333,
+   "baseline_yr": 1.0011441196050606,
+   "expected_shift_px": 0.3256060523818899,
+   "detected": false
+  },
+  {
+   "g": 11.858226,
+   "gaia_arcsec_yr": 1.2744296636132726,
+   "measured_arcsec_yr": 1.0833051127030793,
+   "baseline_yr": 0.9984214516543003,
+   "expected_shift_px": 0.41379444382961467,
+   "detected": false
+  },
+  {
+   "g": 14.552517,
+   "gaia_arcsec_yr": 1.0075894418595064,
+   "measured_arcsec_yr": 1.1369212918596967,
+   "baseline_yr": 1.0065973284830616,
+   "expected_shift_px": 0.32983311882390837,
+   "detected": false
+  },
+  {
+   "g": 12.527368,
+   "gaia_arcsec_yr": 1.2237029198685254,
+   "measured_arcsec_yr": 1.2242600214884698,
+   "baseline_yr": 0.9916242675612607,
+   "expected_shift_px": 0.39461902817144795,
+   "detected": false
+  },
+  {
+   "g": 13.082282,
+   "gaia_arcsec_yr": 1.3057653703458625,
+   "measured_arcsec_yr": 1.1771075958933197,
+   "baseline_yr": 0.43205564017192855,
+   "expected_shift_px": 0.18346773756068843,
+   "detected": false
+  },
+  {
+   "g": 12.89207,
+   "gaia_arcsec_yr": 1.0695675558001536,
+   "measured_arcsec_yr": 0.8443609017429299,
+   "baseline_yr": 0.4472972761872019,
+   "expected_shift_px": 0.15558200143336967,
+   "detected": false
+  },
+  {
+   "g": 14.402348,
+   "gaia_arcsec_yr": 1.0601355128729337,
+   "measured_arcsec_yr": 1.205567374693695,
+   "baseline_yr": 0.9964667249686568,
+   "expected_shift_px": 0.34354138619039337,
+   "detected": false
+  },
+  {
+   "g": 10.748591,
+   "gaia_arcsec_yr": 1.0899043392165577,
+   "measured_arcsec_yr": 1.2344724424042592,
+   "baseline_yr": 1.006586891821591,
+   "expected_shift_px": 0.35677509632353166,
+   "detected": false
+  },
+  {
+   "g": 12.94541,
+   "gaia_arcsec_yr": 1.894855559310794,
+   "measured_arcsec_yr": 1.6318656598361418,
+   "baseline_yr": 0.9981745064971052,
+   "expected_shift_px": 0.6150882968449912,
+   "detected": true
+  },
+  {
+   "g": 11.096197,
+   "gaia_arcsec_yr": 1.0001747421055358,
+   "measured_arcsec_yr": 0.8905835696006714,
+   "baseline_yr": 0.9990349094281664,
+   "expected_shift_px": 0.324946173298128,
+   "detected": false
+  },
+  {
+   "g": 11.567218,
+   "gaia_arcsec_yr": 1.0602613850113982,
+   "measured_arcsec_yr": 1.3222028496421714,
+   "baseline_yr": 0.9892542909609372,
+   "expected_shift_px": 0.3410953250935649,
+   "detected": false
+  },
+  {
+   "g": 10.53407,
+   "gaia_arcsec_yr": 1.4950694223094236,
+   "measured_arcsec_yr": 2.0136995263187507,
+   "baseline_yr": 0.9973946482441223,
+   "expected_shift_px": 0.4849347123788132,
+   "detected": true
+  },
+  {
+   "g": 13.204992,
+   "gaia_arcsec_yr": 2.009038180970355,
+   "measured_arcsec_yr": 1.867745236613295,
+   "baseline_yr": 1.0310737886504133,
+   "expected_shift_px": 0.6736476776573784,
+   "detected": true
+  },
+  {
+   "g": 13.068336,
+   "gaia_arcsec_yr": 1.0712978900229475,
+   "measured_arcsec_yr": 1.2078426211090545,
+   "baseline_yr": 0.9802279968753457,
+   "expected_shift_px": 0.3415011983069848,
+   "detected": false
+  },
+  {
+   "g": 12.299438,
+   "gaia_arcsec_yr": 1.074092692389535,
+   "measured_arcsec_yr": 1.3189179836142204,
+   "baseline_yr": 1.3883925657981526,
+   "expected_shift_px": 0.4849633525501634,
+   "detected": true
+  },
+  {
+   "g": 11.5485115,
+   "gaia_arcsec_yr": 1.5005588698928578,
+   "measured_arcsec_yr": 1.6724636050264186,
+   "baseline_yr": 0.42342036804483923,
+   "expected_shift_px": 0.20662347608552253,
+   "detected": false
+  },
+  {
+   "g": 11.062044,
+   "gaia_arcsec_yr": 1.4933047516923603,
+   "measured_arcsec_yr": 2.0102323600609093,
+   "baseline_yr": 0.9943740752478695,
+   "expected_shift_px": 0.4828954574072651,
+   "detected": true
+  },
+  {
+   "g": 11.071167,
+   "gaia_arcsec_yr": 1.2080247842100031,
+   "measured_arcsec_yr": 1.6628092436543238,
+   "baseline_yr": 0.44709905966362007,
+   "expected_shift_px": 0.17564446994167152,
+   "detected": false
+  },
+  {
+   "g": 14.376431,
+   "gaia_arcsec_yr": 3.8982762613729265,
+   "measured_arcsec_yr": 3.6604085468859884,
+   "baseline_yr": 0.9874104152803578,
+   "expected_shift_px": 1.2517718966243259,
+   "detected": true
+  },
+  {
+   "g": 10.77595,
+   "gaia_arcsec_yr": 1.1257238312523092,
+   "measured_arcsec_yr": 1.2584932914084124,
+   "baseline_yr": 0.9771547092166931,
+   "expected_shift_px": 0.3577256399953339,
+   "detected": false
+  },
+  {
+   "g": 12.719789,
+   "gaia_arcsec_yr": 1.3781172143087572,
+   "measured_arcsec_yr": 1.274822617163718,
+   "baseline_yr": 0.9916070401805601,
+   "expected_shift_px": 0.44440674208214154,
+   "detected": false
+  },
+  {
+   "g": 13.072311,
+   "gaia_arcsec_yr": 1.3210954089710871,
+   "measured_arcsec_yr": 1.329216546040032,
+   "baseline_yr": 0.9928520560478294,
+   "expected_shift_px": 0.42655359123001363,
+   "detected": false
+  },
+  {
+   "g": 10.51338,
+   "gaia_arcsec_yr": 1.4602362302934586,
+   "measured_arcsec_yr": 1.22947038974708,
+   "baseline_yr": 1.005169013374516,
+   "expected_shift_px": 0.47732819866595066,
+   "detected": false
+  },
+  {
+   "g": 11.279728,
+   "gaia_arcsec_yr": 1.261152041795895,
+   "measured_arcsec_yr": 1.2810784714722772,
+   "baseline_yr": 0.9957958162112777,
+   "expected_shift_px": 0.4084064802688334,
+   "detected": false
+  },
+  {
+   "g": 11.902864,
+   "gaia_arcsec_yr": 2.552633143772407,
+   "measured_arcsec_yr": 2.4834340131624097,
+   "baseline_yr": 1.00180215872419,
+   "expected_shift_px": 0.831620615890118,
+   "detected": true
+  },
+  {
+   "g": 11.128549,
+   "gaia_arcsec_yr": 1.214362942478897,
+   "measured_arcsec_yr": 1.1352089688830187,
+   "baseline_yr": 0.9915987057908958,
+   "expected_shift_px": 0.39159698280406446,
+   "detected": false
+  },
+  {
+   "g": 11.235116,
+   "gaia_arcsec_yr": 1.8088200397907397,
+   "measured_arcsec_yr": 2.7793038494765825,
+   "baseline_yr": 1.0247126778815072,
+   "expected_shift_px": 0.6027710005787652,
+   "detected": true
+  },
+  {
+   "g": 12.402631,
+   "gaia_arcsec_yr": 1.0829397772914457,
+   "measured_arcsec_yr": 1.2004205323683406,
+   "baseline_yr": 1.00314053297158,
+   "expected_shift_px": 0.35328155621732193,
+   "detected": false
+  },
+  {
+   "g": 10.681062,
+   "gaia_arcsec_yr": 2.0833929286282933,
+   "measured_arcsec_yr": 2.743405928499385,
+   "baseline_yr": 0.995662913524158,
+   "expected_shift_px": 0.6745876661247722,
+   "detected": true
+  },
+  {
+   "g": 13.914343,
+   "gaia_arcsec_yr": 1.5051829713166602,
+   "measured_arcsec_yr": 1.2595478343687505,
+   "baseline_yr": 0.9995770299140492,
+   "expected_shift_px": 0.48928335738078393,
+   "detected": false
+  },
+  {
+   "g": 12.618702,
+   "gaia_arcsec_yr": 1.9498429019459589,
+   "measured_arcsec_yr": 1.9892510781789376,
+   "baseline_yr": 0.9668085976179444,
+   "expected_shift_px": 0.6130487419855856,
+   "detected": true
+  },
+  {
+   "g": 12.295122,
+   "gaia_arcsec_yr": 1.1079948215308633,
+   "measured_arcsec_yr": 1.413812460882527,
+   "baseline_yr": 0.9971100543564896,
+   "expected_shift_px": 0.3592822038124709,
+   "detected": false
+  },
+  {
+   "g": 11.886798,
+   "gaia_arcsec_yr": 1.0306677606307182,
+   "measured_arcsec_yr": 1.2917038536148902,
+   "baseline_yr": 1.0017745879104127,
+   "expected_shift_px": 0.335771307700288,
+   "detected": false
+  },
+  {
+   "g": 13.615477,
+   "gaia_arcsec_yr": 1.4983706733634008,
+   "measured_arcsec_yr": 0.2506033217994455,
+   "baseline_yr": 0.45567940727041917,
+   "expected_shift_px": 0.2220411903445897,
+   "detected": false
+  },
+  {
+   "g": 14.405324,
+   "gaia_arcsec_yr": 1.1439379603748665,
+   "measured_arcsec_yr": 1.184361676637579,
+   "baseline_yr": 1.0043634150099272,
+   "expected_shift_px": 0.3736355890866964,
+   "detected": false
+  },
+  {
+   "g": 12.131824,
+   "gaia_arcsec_yr": 1.094630881485976,
+   "measured_arcsec_yr": 1.4450222404863597,
+   "baseline_yr": 0.9971100543564896,
+   "expected_shift_px": 0.3549487667443166,
+   "detected": false
+  },
+  {
+   "g": 11.547314,
+   "gaia_arcsec_yr": 1.1637977217883184,
+   "measured_arcsec_yr": 1.507023616326023,
+   "baseline_yr": 0.9815546991704961,
+   "expected_shift_px": 0.3714897960017045,
+   "detected": false
+  },
+  {
+   "g": 13.706062,
+   "gaia_arcsec_yr": 1.264467743317837,
+   "measured_arcsec_yr": 1.4206092745063348,
+   "baseline_yr": 0.9957129641227552,
+   "expected_shift_px": 0.40944615438589094,
+   "detected": false
+  },
+  {
+   "g": 10.681553,
+   "gaia_arcsec_yr": 1.7492038738530888,
+   "measured_arcsec_yr": 1.91377624755527,
+   "baseline_yr": 1.0087332732782932,
+   "expected_shift_px": 0.573814682700129,
+   "detected": true
+  },
+  {
+   "g": 12.452551,
+   "gaia_arcsec_yr": 1.758392232941108,
+   "measured_arcsec_yr": 1.745799691414023,
+   "baseline_yr": 1.0291635180368879,
+   "expected_shift_px": 0.5885115891194828,
+   "detected": true
+  },
+  {
+   "g": 14.664224,
+   "gaia_arcsec_yr": 1.3906121242672607,
+   "measured_arcsec_yr": 0.9581366995869792,
+   "baseline_yr": 0.9884422450388097,
+   "expected_shift_px": 0.4470048032809494,
+   "detected": false
+  },
+  {
+   "g": 13.092439,
+   "gaia_arcsec_yr": 1.060314797408499,
+   "measured_arcsec_yr": 1.0862975744483272,
+   "baseline_yr": 0.9864972079820584,
+   "expected_shift_px": 0.34016181698391745,
+   "detected": false
+  },
+  {
+   "g": 13.184315,
+   "gaia_arcsec_yr": 1.3770665404881395,
+   "measured_arcsec_yr": 1.1468168409177275,
+   "baseline_yr": 0.9916070401805601,
+   "expected_shift_px": 0.44406792726670813,
+   "detected": false
+  },
+  {
+   "g": 11.554967,
+   "gaia_arcsec_yr": 1.9817496764029745,
+   "measured_arcsec_yr": 1.2091697224230957,
+   "baseline_yr": 0.9888980555622443,
+   "expected_shift_px": 0.6373165533678076,
+   "detected": false
+  },
+  {
+   "g": 13.982239,
+   "gaia_arcsec_yr": 1.147795451185128,
+   "measured_arcsec_yr": 1.3167011456121767,
+   "baseline_yr": 0.9971930330163554,
+   "expected_shift_px": 0.3722190657722517,
+   "detected": false
+  },
+  {
+   "g": 14.848741,
+   "gaia_arcsec_yr": 1.6348472382536712,
+   "measured_arcsec_yr": 1.1514254390039265,
+   "baseline_yr": 0.9968669532915283,
+   "expected_shift_px": 0.5299919302422785,
+   "detected": false
+  },
+  {
+   "g": 11.699139,
+   "gaia_arcsec_yr": 1.1430372259659867,
+   "measured_arcsec_yr": 1.1370278602422783,
+   "baseline_yr": 0.9995254805815709,
+   "expected_shift_px": 0.37154303499391167,
+   "detected": false
+  },
+  {
+   "g": 13.844949,
+   "gaia_arcsec_yr": 1.7263561994160206,
+   "measured_arcsec_yr": 1.8154993232374859,
+   "baseline_yr": 1.0774354977178398,
+   "expected_shift_px": 0.6048902279531962,
+   "detected": true
+  },
+  {
+   "g": 11.286115,
+   "gaia_arcsec_yr": 1.1620421968635075,
+   "measured_arcsec_yr": 1.3061095553836295,
+   "baseline_yr": 0.9987617269981318,
+   "expected_shift_px": 0.377431958173691,
+   "detected": false
+  },
+  {
+   "g": 13.6215315,
+   "gaia_arcsec_yr": 1.8114832382182813,
+   "measured_arcsec_yr": 1.774728061736663,
+   "baseline_yr": 0.998398923950671,
+   "expected_shift_px": 0.5881570457859541,
+   "detected": true
+  },
+  {
+   "g": 13.467986,
+   "gaia_arcsec_yr": 1.4770970039588354,
+   "measured_arcsec_yr": 1.6875418552041876,
+   "baseline_yr": 0.9982482421418354,
+   "expected_shift_px": 0.47951528054467607,
+   "detected": true
+  },
+  {
+   "g": 11.218517,
+   "gaia_arcsec_yr": 1.1590391848283892,
+   "measured_arcsec_yr": 1.2845804003543408,
+   "baseline_yr": 0.9994261772410276,
+   "expected_shift_px": 0.3767070249644207,
+   "detected": false
+  },
+  {
+   "g": 11.546009,
+   "gaia_arcsec_yr": 2.4290610029486066,
+   "measured_arcsec_yr": 2.343148338485831,
+   "baseline_yr": 0.9926362069077481,
+   "expected_shift_px": 0.7841215935981902,
+   "detected": true
+  },
+  {
+   "g": 11.868173,
+   "gaia_arcsec_yr": 1.2133984203492048,
+   "measured_arcsec_yr": 1.1917654897055414,
+   "baseline_yr": 0.993033934678053,
+   "expected_shift_px": 0.3918522951842292,
+   "detected": false
+  },
+  {
+   "g": 11.551442,
+   "gaia_arcsec_yr": 1.0277192702000617,
+   "measured_arcsec_yr": 1.2628732940857579,
+   "baseline_yr": 1.0184566372035222,
+   "expected_shift_px": 0.3403861827373049,
+   "detected": false
+  },
+  {
+   "g": 11.859422,
+   "gaia_arcsec_yr": 1.64787827061688,
+   "measured_arcsec_yr": 1.7890407583127645,
+   "baseline_yr": 0.9867714940928903,
+   "expected_shift_px": 0.5288062774568543,
+   "detected": true
+  },
+  {
+   "g": 13.95689,
+   "gaia_arcsec_yr": 1.270984483637083,
+   "measured_arcsec_yr": 0.07920153434243804,
+   "baseline_yr": 0.44903887518107316,
+   "expected_shift_px": 0.18560046923739604,
+   "detected": false
+  },
+  {
+   "g": 11.465005,
+   "gaia_arcsec_yr": 1.1421687442995518,
+   "measured_arcsec_yr": 1.250162982859141,
+   "baseline_yr": 1.0257457352764403,
+   "expected_shift_px": 0.38099990843294707,
+   "detected": false
+  },
+  {
+   "g": 13.135852,
+   "gaia_arcsec_yr": 1.1612932032252412,
+   "measured_arcsec_yr": 1.5208285772633083,
+   "baseline_yr": 1.0231605807401276,
+   "expected_shift_px": 0.38640306608829295,
+   "detected": true
+  },
+  {
+   "g": 13.460815,
+   "gaia_arcsec_yr": 1.4855115353968669,
+   "measured_arcsec_yr": 1.5428480159241447,
+   "baseline_yr": 1.3840412183745696,
+   "expected_shift_px": 0.6686208765398886,
+   "detected": true
+  },
+  {
+   "g": 12.006025,
+   "gaia_arcsec_yr": 1.165138339119838,
+   "measured_arcsec_yr": 0.9054936272068351,
+   "baseline_yr": 1.007635558797143,
+   "expected_shift_px": 0.38179994192357497,
+   "detected": false
+  },
+  {
+   "g": 14.72708,
+   "gaia_arcsec_yr": 1.3656028006391459,
+   "measured_arcsec_yr": 1.431830190350856,
+   "baseline_yr": 1.0077096271021613,
+   "expected_shift_px": 0.4475223053664198,
+   "detected": false
+  },
+  {
+   "g": 10.908869,
+   "gaia_arcsec_yr": 1.0446532035920915,
+   "measured_arcsec_yr": 1.4977053017740822,
+   "baseline_yr": 1.0017745879104127,
+   "expected_shift_px": 0.3403274902561821,
+   "detected": false
+  },
+  {
+   "g": 13.015211,
+   "gaia_arcsec_yr": 2.118599073502461,
+   "measured_arcsec_yr": 2.1682585636145726,
+   "baseline_yr": 1.0003120000990096,
+   "expected_shift_px": 0.6891902688205384,
+   "detected": true
+  },
+  {
+   "g": 12.852514,
+   "gaia_arcsec_yr": 1.2167459090131931,
+   "measured_arcsec_yr": 1.1595293165956901,
+   "baseline_yr": 1.0145758688058222,
+   "expected_shift_px": 0.4014572480497529,
+   "detected": false
+  },
+  {
+   "g": 13.059598,
+   "gaia_arcsec_yr": 1.065049616669854,
+   "measured_arcsec_yr": 0.8580324072751475,
+   "baseline_yr": 1.0044042534438673,
+   "expected_shift_px": 0.34788304556486555,
+   "detected": false
+  },
+  {
+   "g": 11.412538,
+   "gaia_arcsec_yr": 1.2770273160299672,
+   "measured_arcsec_yr": 1.318998186223397,
+   "baseline_yr": 1.008029263992637,
+   "expected_shift_px": 0.41862793674022125,
+   "detected": false
+  },
+  {
+   "g": 10.752913,
+   "gaia_arcsec_yr": 2.9701291499775886,
+   "measured_arcsec_yr": 3.689312836283787,
+   "baseline_yr": 0.9984509220492945,
+   "expected_shift_px": 0.9643994108619871,
+   "detected": true
+  },
+  {
+   "g": 12.005642,
+   "gaia_arcsec_yr": 1.220473465083485,
+   "measured_arcsec_yr": 1.3253203202180077,
+   "baseline_yr": 1.4091560561938807,
+   "expected_shift_px": 0.5592967722752272,
+   "detected": true
+  },
+  {
+   "g": 13.526741,
+   "gaia_arcsec_yr": 1.061304933799477,
+   "measured_arcsec_yr": 0.710889401820837,
+   "baseline_yr": 1.0141442575391606,
+   "expected_shift_px": 0.3500215623124288,
+   "detected": false
+  },
+  {
+   "g": 13.985264,
+   "gaia_arcsec_yr": 1.1411607134487107,
+   "measured_arcsec_yr": 0.6524551982439297,
+   "baseline_yr": 1.0101929761693351,
+   "expected_shift_px": 0.3748918820833414,
+   "detected": false
+  },
+  {
+   "g": 14.43916,
+   "gaia_arcsec_yr": 1.2093979471638703,
+   "measured_arcsec_yr": 0.7470022702097214,
+   "baseline_yr": 1.0037551259082211,
+   "expected_shift_px": 0.39477703698491534,
+   "detected": false
+  },
+  {
+   "g": 13.494663,
+   "gaia_arcsec_yr": 1.1712257342672003,
+   "measured_arcsec_yr": 0.21079198662027535,
+   "baseline_yr": 0.423885016116513,
+   "expected_shift_px": 0.1614520452832283,
+   "detected": false
+  },
+  {
+   "g": 13.8219595,
+   "gaia_arcsec_yr": 1.3018516074787407,
+   "measured_arcsec_yr": 0.3451423272265633,
+   "baseline_yr": 0.456192170263612,
+   "expected_shift_px": 0.19313642607378817,
+   "detected": false
+  },
+  {
+   "g": 11.106811,
+   "gaia_arcsec_yr": 1.721483571551864,
+   "measured_arcsec_yr": 1.6520217844321126,
+   "baseline_yr": 1.0026562570032773,
+   "expected_shift_px": 0.5613191136080733,
+   "detected": true
+  },
+  {
+   "g": 10.907413,
+   "gaia_arcsec_yr": 1.2128097816219088,
+   "measured_arcsec_yr": 1.167643881751367,
+   "baseline_yr": 0.99171591836407,
+   "expected_shift_px": 0.39114236305108896,
+   "detected": false
+  },
+  {
+   "g": 14.005882,
+   "gaia_arcsec_yr": 1.5385573896297027,
+   "measured_arcsec_yr": 1.4645454606217576,
+   "baseline_yr": 0.9989959082188629,
+   "expected_shift_px": 0.4998414753821033,
+   "detected": false
+  },
+  {
+   "g": 12.837447,
+   "gaia_arcsec_yr": 1.6359696402596116,
+   "measured_arcsec_yr": 1.2807470868010653,
+   "baseline_yr": 1.0363408581223723,
+   "expected_shift_px": 0.5513568067800958,
+   "detected": false
+  },
+  {
+   "g": 13.057154,
+   "gaia_arcsec_yr": 1.2967756601266418,
+   "measured_arcsec_yr": 1.2106382638393813,
+   "baseline_yr": 1.0038723750146907,
+   "expected_shift_px": 0.4233487030219757,
+   "detected": false
+  },
+  {
+   "g": 11.87823,
+   "gaia_arcsec_yr": 1.184478210696196,
+   "measured_arcsec_yr": 0.142865243018849,
+   "baseline_yr": 0.44980814923602586,
+   "expected_shift_px": 0.17326437455728627,
+   "detected": false
+  },
+  {
+   "g": 12.035498,
+   "gaia_arcsec_yr": 1.5798167981546911,
+   "measured_arcsec_yr": 1.694453949604149,
+   "baseline_yr": 0.9956502406786791,
+   "expected_shift_px": 0.5115268212393295,
+   "detected": true
+  },
+  {
+   "g": 11.630119,
+   "gaia_arcsec_yr": 1.230282480643262,
+   "measured_arcsec_yr": 1.144308725044265,
+   "baseline_yr": 1.0066467995534576,
+   "expected_shift_px": 0.4027511940443018,
+   "detected": false
+  },
+  {
+   "g": 13.179596,
+   "gaia_arcsec_yr": 1.2562195057067689,
+   "measured_arcsec_yr": 0.08572918280801979,
+   "baseline_yr": 1.0019798466462562,
+   "expected_shift_px": 0.40933548867710695,
+   "detected": false
+  },
+  {
+   "g": 14.189628,
+   "gaia_arcsec_yr": 1.3891291246664283,
+   "measured_arcsec_yr": 1.3354252305101735,
+   "baseline_yr": 1.00209832843411,
+   "expected_shift_px": 0.45269722725442807,
+   "detected": false
+  },
+  {
+   "g": 12.551908,
+   "gaia_arcsec_yr": 1.2585607146190647,
+   "measured_arcsec_yr": 0.9362266924884451,
+   "baseline_yr": 0.9929278358242355,
+   "expected_shift_px": 0.4063934850797109,
+   "detected": false
+  },
+  {
+   "g": 10.817838,
+   "gaia_arcsec_yr": 3.2319073047082565,
+   "measured_arcsec_yr": 2.7836453988439653,
+   "baseline_yr": 0.9970735161188787,
+   "expected_shift_px": 1.0479509528701625,
+   "detected": true
+  },
+  {
+   "g": 14.3020525,
+   "gaia_arcsec_yr": 1.3336987687670745,
+   "measured_arcsec_yr": 1.2793803683133063,
+   "baseline_yr": 1.3903883310282443,
+   "expected_shift_px": 0.6030436439676348,
+   "detected": true
+  },
+  {
+   "g": 12.257253,
+   "gaia_arcsec_yr": 4.4449107323908885,
+   "measured_arcsec_yr": 1.1386494546223476,
+   "baseline_yr": 0.9865696012076886,
+   "expected_shift_px": 1.4260857914337086,
+   "detected": false
+  },
+  {
+   "g": 12.004274,
+   "gaia_arcsec_yr": 1.1401971557933068,
+   "measured_arcsec_yr": 1.4033049151330754,
+   "baseline_yr": 0.9854997364560083,
+   "expected_shift_px": 0.3654191858673802,
+   "detected": false
+  },
+  {
+   "g": 14.181332,
+   "gaia_arcsec_yr": 1.3157539565350684,
+   "measured_arcsec_yr": 1.2998720570912745,
+   "baseline_yr": 1.038399703308702,
+   "expected_shift_px": 0.4443182172661027,
+   "detected": false
+  },
+  {
+   "g": 11.510122,
+   "gaia_arcsec_yr": 1.65109764413245,
+   "measured_arcsec_yr": 1.529515437864116,
+   "baseline_yr": 1.0010127084916622,
+   "expected_shift_px": 0.5374860893454395,
+   "detected": false
+  },
+  {
+   "g": 12.640247,
+   "gaia_arcsec_yr": 1.1026675242502073,
+   "measured_arcsec_yr": 0.6849260621488735,
+   "baseline_yr": 0.9951203772853758,
+   "expected_shift_px": 0.35684127569177154,
+   "detected": false
+  },
+  {
+   "g": 13.652459,
+   "gaia_arcsec_yr": 1.598273365003571,
+   "measured_arcsec_yr": 1.3466782678268103,
+   "baseline_yr": 1.0115846450103572,
+   "expected_shift_px": 0.5257849738428118,
+   "detected": false
+  },
+  {
+   "g": 12.697248,
+   "gaia_arcsec_yr": 1.3813018880630081,
+   "measured_arcsec_yr": 1.2813010633453337,
+   "baseline_yr": 0.9914488734260378,
+   "expected_shift_px": 0.44536266692075716,
+   "detected": false
+  },
+  {
+   "g": 12.619689,
+   "gaia_arcsec_yr": 1.2085412764623056,
+   "measured_arcsec_yr": 0.7672895613214882,
+   "baseline_yr": 1.0202732576550506,
+   "expected_shift_px": 0.4009893805355413,
+   "detected": false
+  },
+  {
+   "g": 12.000418,
+   "gaia_arcsec_yr": 1.2073338195094758,
+   "measured_arcsec_yr": 0.1907674342104427,
+   "baseline_yr": 0.44980814923602586,
+   "expected_shift_px": 0.17660767182556728,
+   "detected": false
+  },
+  {
+   "g": 14.976862,
+   "gaia_arcsec_yr": 1.236897249896689,
+   "measured_arcsec_yr": 1.0912171827900286,
+   "baseline_yr": 0.9816070577728492,
+   "expected_shift_px": 0.3948445756872902,
+   "detected": false
+  },
+  {
+   "g": 10.575351,
+   "gaia_arcsec_yr": 1.7775812829832567,
+   "measured_arcsec_yr": 1.8466460988273576,
+   "baseline_yr": 0.9920980636937854,
+   "expected_shift_px": 0.573507300457237,
+   "detected": true
+  },
+  {
+   "g": 13.263012,
+   "gaia_arcsec_yr": 1.0251494196408713,
+   "measured_arcsec_yr": 0.6836351341682936,
+   "baseline_yr": 0.4567176945993626,
+   "expected_shift_px": 0.15226142424658642,
+   "detected": false
+  },
+  {
+   "g": 11.690339,
+   "gaia_arcsec_yr": 1.0198772516618915,
+   "measured_arcsec_yr": 0.9929659712828237,
+   "baseline_yr": 0.9998319499080438,
+   "expected_shift_px": 0.33161166217754984,
+   "detected": false
+  },
+  {
+   "g": 12.11649,
+   "gaia_arcsec_yr": 1.2879875073010831,
+   "measured_arcsec_yr": 1.6543478401139704,
+   "baseline_yr": 0.4462955981521841,
+   "expected_shift_px": 0.1869343593442203,
+   "detected": false
+  },
+  {
+   "g": 11.235408,
+   "gaia_arcsec_yr": 1.302054061712816,
+   "measured_arcsec_yr": 1.3017688718263456,
+   "baseline_yr": 0.9872966660395016,
+   "expected_shift_px": 0.41805321435195275,
+   "detected": false
+  },
+  {
+   "g": 10.503306,
+   "gaia_arcsec_yr": 1.54755390511172,
+   "measured_arcsec_yr": 1.8344252063456383,
+   "baseline_yr": 0.9940941419693387,
+   "expected_shift_px": 0.5002973240498649,
+   "detected": true
+  },
+  {
+   "g": 14.885792,
+   "gaia_arcsec_yr": 1.0115195301071902,
+   "measured_arcsec_yr": 0.6503178218983661,
+   "baseline_yr": 0.9940209493871643,
+   "expected_shift_px": 0.3269826353303439,
+   "detected": false
+  },
+  {
+   "g": 10.507542,
+   "gaia_arcsec_yr": 3.428807325044849,
+   "measured_arcsec_yr": 2.3920965050146465,
+   "baseline_yr": 0.9970735161188787,
+   "expected_shift_px": 1.111796089650938,
+   "detected": false
+  },
+  {
+   "g": 14.556997,
+   "gaia_arcsec_yr": 1.4421939318907393,
+   "measured_arcsec_yr": 1.4545585565370192,
+   "baseline_yr": 0.9867712483640108,
+   "expected_shift_px": 0.46280179074953687,
+   "detected": false
+  },
+  {
+   "g": 13.579907,
+   "gaia_arcsec_yr": 1.6459002709267967,
+   "measured_arcsec_yr": 1.440157114833376,
+   "baseline_yr": 1.0002310673984245,
+   "expected_shift_px": 0.5353757999416149,
+   "detected": false
+  },
+  {
+   "g": 11.167263,
+   "gaia_arcsec_yr": 1.571061599178752,
+   "measured_arcsec_yr": 1.7644869527728797,
+   "baseline_yr": 1.0020015845148358,
+   "expected_shift_px": 0.5119369794300882,
+   "detected": true
+  },
+  {
+   "g": 14.3032875,
+   "gaia_arcsec_yr": 1.491524231512056,
+   "measured_arcsec_yr": 1.5132863955196671,
+   "baseline_yr": 0.9887397795485361,
+   "expected_shift_px": 0.4795867771891154,
+   "detected": false
+  },
+  {
+   "g": 13.252852,
+   "gaia_arcsec_yr": 1.395843260801709,
+   "measured_arcsec_yr": 1.5932159159780201,
+   "baseline_yr": 1.0116141267185341,
+   "expected_shift_px": 0.459204800426625,
+   "detected": true
+  },
+  {
+   "g": 14.669283,
+   "gaia_arcsec_yr": 1.222427473074378,
+   "measured_arcsec_yr": 1.1781787065205984,
+   "baseline_yr": 1.3991839700301745,
+   "expected_shift_px": 0.5562279430407032,
+   "detected": true
+  },
+  {
+   "g": 14.390027,
+   "gaia_arcsec_yr": 1.0824719214227134,
+   "measured_arcsec_yr": 1.4855756039806196,
+   "baseline_yr": 0.4471128322833693,
+   "expected_shift_px": 0.1573941745217984,
+   "detected": false
+  },
+  {
+   "g": 13.286774,
+   "gaia_arcsec_yr": 1.3534742878662827,
+   "measured_arcsec_yr": 1.506686446399263,
+   "baseline_yr": 1.0147576543283903,
+   "expected_shift_px": 0.44664988408096823,
+   "detected": false
+  },
+  {
+   "g": 14.641529,
+   "gaia_arcsec_yr": 1.585804536764555,
+   "measured_arcsec_yr": 2.233243404707459,
+   "baseline_yr": 0.4421654953369533,
+   "expected_shift_px": 0.22802863366051618,
+   "detected": false
+  },
+  {
+   "g": 12.775483,
+   "gaia_arcsec_yr": 1.0202004524124042,
+   "measured_arcsec_yr": 0.9965060761096617,
+   "baseline_yr": 0.9951938741680381,
+   "expected_shift_px": 0.33017796444367015,
+   "detected": false
+  },
+  {
+   "g": 11.170794,
+   "gaia_arcsec_yr": 1.4702809703335955,
+   "measured_arcsec_yr": 1.6676962622214457,
+   "baseline_yr": 0.9994937538297094,
+   "expected_shift_px": 0.4778980963327196,
+   "detected": true
+  },
+  {
+   "g": 10.572564,
+   "gaia_arcsec_yr": 1.332614615751781,
+   "measured_arcsec_yr": 1.8156254276939523,
+   "baseline_yr": 0.9984533088534542,
+   "expected_shift_px": 0.4327003162679155,
+   "detected": true
+  },
+  {
+   "g": 12.528455,
+   "gaia_arcsec_yr": 1.3903964456402673,
+   "measured_arcsec_yr": 1.209861586365233,
+   "baseline_yr": 1.0022794652976166,
+   "expected_shift_px": 0.45319213206114917,
+   "detected": false
+  },
+  {
+   "g": 12.949484,
+   "gaia_arcsec_yr": 1.9267723899985891,
+   "measured_arcsec_yr": 1.6448360909955089,
+   "baseline_yr": 0.9996372493650915,
+   "expected_shift_px": 0.6263653502734285,
+   "detected": true
+  },
+  {
+   "g": 13.387767,
+   "gaia_arcsec_yr": 1.1186021429011144,
+   "measured_arcsec_yr": 0.5149576603637892,
+   "baseline_yr": 1.0010142999622595,
+   "expected_shift_px": 0.3641420295975422,
+   "detected": false
+  },
+  {
+   "g": 13.417598,
+   "gaia_arcsec_yr": 1.2244059400526597,
+   "measured_arcsec_yr": 1.1595019378917915,
+   "baseline_yr": 0.9961338798496933,
+   "expected_shift_px": 0.396641378723794,
+   "detected": false
+  },
+  {
+   "g": 14.53248,
+   "gaia_arcsec_yr": 1.0264791220598506,
+   "measured_arcsec_yr": 1.1430686516626254,
+   "baseline_yr": 0.9960597766307557,
+   "expected_shift_px": 0.3324990455398598,
+   "detected": false
+  },
+  {
+   "g": 11.349268,
+   "gaia_arcsec_yr": 1.143303107743171,
+   "measured_arcsec_yr": 1.3132963945153557,
+   "baseline_yr": 1.0000892604900546,
+   "expected_shift_px": 0.3718390762727965,
+   "detected": false
+  },
+  {
+   "g": 11.038391,
+   "gaia_arcsec_yr": 4.715329596916088,
+   "measured_arcsec_yr": 5.836270511497099,
+   "baseline_yr": 1.049023191371109,
+   "expected_shift_px": 1.608614667357255,
+   "detected": true
+  },
+  {
+   "g": 11.423104,
+   "gaia_arcsec_yr": 2.683897120165607,
+   "measured_arcsec_yr": 2.6545640976873086,
+   "baseline_yr": 0.9884854274184216,
+   "expected_shift_px": 0.8627620136500718,
+   "detected": true
+  },
+  {
+   "g": 11.1648445,
+   "gaia_arcsec_yr": 1.1255147007324817,
+   "measured_arcsec_yr": 1.199581600196477,
+   "baseline_yr": 1.001699840826458,
+   "expected_shift_px": 0.366643218397257,
+   "detected": false
+  },
+  {
+   "g": 13.505909,
+   "gaia_arcsec_yr": 1.667722143503533,
+   "measured_arcsec_yr": 1.6134260695173066,
+   "baseline_yr": 0.9987090794075512,
+   "expected_shift_px": 0.5416485354946345,
+   "detected": true
+  },
+  {
+   "g": 13.0888405,
+   "gaia_arcsec_yr": 2.28240465747112,
+   "measured_arcsec_yr": 0.7140611718959025,
+   "baseline_yr": 0.9968750711403473,
+   "expected_shift_px": 0.7399259529390513,
+   "detected": false
+  },
+  {
+   "g": 12.492158,
+   "gaia_arcsec_yr": 2.1031040567402117,
+   "measured_arcsec_yr": 1.8220215812959732,
+   "baseline_yr": 0.9896435170924021,
+   "expected_shift_px": 0.6768531042353436,
+   "detected": true
+  },
+  {
+   "g": 11.746953,
+   "gaia_arcsec_yr": 2.0356749963307466,
+   "measured_arcsec_yr": 1.7896418408005939,
+   "baseline_yr": 1.0118526498634555,
+   "expected_shift_px": 0.669854679446519,
+   "detected": true
+  }
+ ]
+}

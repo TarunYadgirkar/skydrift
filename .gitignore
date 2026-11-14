@@ -7,3 +7,4 @@ pipeline/index/
 pipeline/data/
 *.log
 .DS_Store
+web/public/skyindex/

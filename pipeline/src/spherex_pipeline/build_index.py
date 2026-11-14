@@ -98,7 +98,8 @@ async def index_week(session: aiohttp.ClientSession, semaphore: asyncio.Semaphor
 
 async def main() -> None:
     INDEX_DIR.mkdir(exist_ok=True)
-    only = sys.argv[1:]
+    reverse = "--reverse" in sys.argv
+    only = [arg for arg in sys.argv[1:] if arg != "--reverse"]
     timeout = aiohttp.ClientTimeout(total=120)
     connector = aiohttp.TCPConnector(limit=CONCURRENCY)
     semaphore = asyncio.Semaphore(CONCURRENCY)
@@ -111,7 +112,7 @@ async def main() -> None:
         if only:
             weeks = [w for w in weeks if any(token in w for token in only)]
         total = 0
-        for week in weeks:
+        for week in reversed(weeks) if reverse else weeks:
             total += await index_week(session, semaphore, week)
     print(f"done {total} files in {time.time() - started:.0f}s", flush=True)
 

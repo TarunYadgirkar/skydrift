@@ -44,7 +44,7 @@ https://skydrift-steel.vercel.app
 **Does it work**
 
 - On 1,351 held-out star pairs the detector catches 95% of slid stars at a 1% false-alarm rate, with a median shift error of 0.7 arcseconds.
-- On the challenge's test targets: Barnard's Star is measured at 10.1″/yr north (Gaia: 10.4″/yr), Epsilon Indi B at 4.2″/yr southeast (Gaia: 4.7″/yr). RW Aurigae and R Draconis are variable stars and are correctly reported as not moving. WISE 0855−0714 is shown in the 4.4 to 5.0 µm band at its predicted position; it is faint, and the automatic detector does not flag it yet.
+- On the challenge's test targets: Barnard's Star is measured at 10.1″/yr north (Gaia: 10.4″/yr), Epsilon Indi B at 4.2″/yr southeast (Gaia: 4.7″/yr). RW Aurigae and R Draconis are variable stars and are correctly reported as not moving. WISE 0855−0714, a cold brown dwarf that Gaia cannot see, is flagged at 8.0″/yr west in the 4.4 to 5.0 µm band and 7.5″/yr west in the 3.8 to 4.4 µm band (published: 8.1″/yr), and is reported as not in Gaia. That is the case the tool is built to surface.
 - On real moving stars: the detector was run on 140 stars that Gaia measures moving faster than 1″ per year. 41 of them shifted by at least half a Skydrift pixel between the first and last SPHEREx pass, which is the smallest shift the tool reports. It recovered 31 of those 41 (76%), and its speeds differ from Gaia's by a median of 11%. Of 2,130 other sources in the same fields, 10 were flagged (0.5%), before the Gaia cross-check removes the ones Gaia knows are still. The other 99 stars moved less than half a pixel in the time SPHEREx has been observing, and 9 of them were still recovered.
 
 **Benefits and goals**

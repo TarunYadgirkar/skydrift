@@ -7,7 +7,7 @@ import { BANDS, NATIVE_SCALE_ARCSEC } from "@/lib/spherex";
 import { extractSpectrum, type SpectrumPoint } from "@/lib/spectrum";
 import { formatDec, formatRa, mjdToDate, mjdToYear, type Target } from "@/lib/target";
 import { fetchGaiaStars, gaiaPositionAt, totalMotionMasYr, type GaiaStar } from "@/lib/gaia";
-import { findMovers, type MoverReport } from "@/lib/movers";
+import { deepestPassRange, findMovers, type MoverReport } from "@/lib/movers";
 import type { Session } from "@/lib/session";
 import { EpochStrip } from "./EpochStrip";
 import { MoversPanel } from "./MoversPanel";
@@ -97,7 +97,8 @@ export function Workbench() {
   const stretch = useMemo(() => stretchFor(frames), [frames]);
   const firstAvailable = available.indexOf(true);
   const shownEpoch = available[epoch] ? epoch : Math.max(firstAvailable, 0);
-  const gaia = gaiaResult && gaiaResult.session === session ? gaiaResult : EMPTY_GAIA;
+  const isGaiaSettled = gaiaResult !== null && gaiaResult.session === session;
+  const gaia = isGaiaSettled ? gaiaResult : EMPTY_GAIA;
   const movers = moversResult && moversResult.frames === frames ? moversResult.report : null;
 
   useEffect(() => {
@@ -136,14 +137,15 @@ export function Workbench() {
     return () => controller.abort();
   }, [session]);
 
-  const lastAvailable = available.lastIndexOf(true);
   useEffect(() => {
-    if (!session || firstAvailable < 0 || lastAvailable <= firstAvailable) return;
+    const range = session && isGaiaSettled ? deepestPassRange(frames) : null;
+    if (!session || !range) return;
     let cancelled = false;
-    const first = frames[firstAvailable];
-    const last = frames[lastAvailable];
+    const [firstPass, lastPass] = range;
+    const first = frames[firstPass];
+    const last = frames[lastPass];
     if (!first || !last) return;
-    void findMovers(session.grid, first, last, session.epochs[firstAvailable].mjd, session.epochs[lastAvailable].mjd, gaia.stars)
+    void findMovers(session.grid, first, last, session.epochs[firstPass].mjd, session.epochs[lastPass].mjd, gaia.stars)
       .then((report) => {
         if (!cancelled) setMoversResult({ frames, report });
       })
@@ -151,7 +153,7 @@ export function Workbench() {
     return () => {
       cancelled = true;
     };
-  }, [session, frames, firstAvailable, lastAvailable, gaia.stars]);
+  }, [session, frames, isGaiaSettled, gaia.stars]);
 
   const view = useMemo(() => {
     const frame = frames[shownEpoch] ?? null;

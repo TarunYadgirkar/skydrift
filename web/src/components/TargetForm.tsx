@@ -18,7 +18,7 @@ export const PRESETS: Preset[] = [
     label: "WISE 0855−0714",
     note: "Cold brown dwarf, 7 light-years away",
     query: "WISE 0855-0714",
-    target: { name: "WISE 0855−0714", raDeg: 133.795129, decDeg: -7.245147, pmRaMasYr: -8118, pmDecMasYr: 680, epochYear: 2014.4 },
+    target: { name: "WISE 0855−0714", raDeg: 133.795129, decDeg: -7.245147, pmRaMasYr: -8118, pmDecMasYr: 680, epochYear: 2010.3 },
   },
   { label: "Epsilon Indi B", note: "Pair of brown dwarfs orbiting a star", query: "eps Ind B" },
   { label: "RW Aurigae", note: "Young star that changes brightness", query: "RW Aur" },

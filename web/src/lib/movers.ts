@@ -12,10 +12,13 @@ const EDGE_MARGIN = 12;
 const MIN_SHIFT_PX = 0.5;
 const STATIC_SHIFT_PX = 1;
 const GAIA_MATCH_ARCSEC = 9;
+const GAIA_SAME_SOURCE_ARCSEC = 5;
+const GAIA_BRIGHT_MAG = 13;
 const CUBIC_A = -0.75;
 const DUPLICATE_RADIUS_PX = 5;
 const GAIA_DISAGREEMENT_ARCSEC_YR = 1;
 const GAIA_DISAGREEMENT_FRACTION = 0.5;
+const SHALLOW_PASS_NOISE_RATIO = 1.5;
 
 export interface DetectedSource {
   x: number;
@@ -50,6 +53,18 @@ function noiseSigma(frame: Float32Array): number {
   for (const value of frame) if (Number.isFinite(value)) finite.push(value);
   const center = median([...finite]);
   return 1.4826 * median(finite.map((value) => Math.abs(value - center))) || 1e-6;
+}
+
+/** A pass built from few exposures is too noisy to show faint sources, so the comparison skips it. */
+export function deepestPassRange(frames: (Float32Array | null)[]): [number, number] | null {
+  const noise = frames.map((frame) => (frame ? noiseSigma(frame) : Infinity));
+  const limit = Math.min(...noise) * SHALLOW_PASS_NOISE_RATIO;
+  const deepFirst = noise.findIndex((value) => value <= limit);
+  const deepLast = noise.findLastIndex((value) => value <= limit);
+  if (deepLast > deepFirst) return [deepFirst, deepLast];
+  const first = noise.findIndex(Number.isFinite);
+  const last = noise.findLastIndex(Number.isFinite);
+  return last > first ? [first, last] : null;
 }
 
 export function detectSources(frame: Float32Array, size: number): DetectedSource[] {
@@ -139,19 +154,29 @@ function buildInput(first: Float32Array, second: Float32Array): Float32Array {
   return input;
 }
 
-function matchGaia(stars: GaiaStar[], raDeg: number, decDeg: number, year: number): GaiaStar | null {
-  let best: GaiaStar | null = null;
-  let bestDistance = GAIA_MATCH_ARCSEC;
+interface GaiaMatch {
+  star: GaiaStar;
+  distanceArcsec: number;
+}
+
+function matchGaia(stars: GaiaStar[], raDeg: number, decDeg: number, year: number): GaiaMatch | null {
+  let best: GaiaMatch | null = null;
   const cosDec = Math.cos((decDeg * Math.PI) / 180);
   for (const star of stars) {
     const position = gaiaPositionAt(star, year);
-    const distance = Math.hypot((position.raDeg - raDeg) * cosDec, position.decDeg - decDeg) * 3600;
-    if (distance < bestDistance) {
-      best = star;
-      bestDistance = distance;
-    }
+    const distanceArcsec = Math.hypot((position.raDeg - raDeg) * cosDec, position.decDeg - decDeg) * 3600;
+    if (distanceArcsec < (best?.distanceArcsec ?? GAIA_MATCH_ARCSEC)) best = { star, distanceArcsec };
   }
   return best;
+}
+
+/**
+ * A moving source can pass a few arcseconds from an unrelated still star. A faint star is only taken to be the
+ * source when it sits right on it. A bright star keeps the wide radius, because its saturated core shifts the centroid.
+ */
+function isPassingNeighbour(match: GaiaMatch, speedArcsecYr: number): boolean {
+  const isFaint = match.star.gMag > GAIA_BRIGHT_MAG;
+  return isFaint && match.distanceArcsec > GAIA_SAME_SOURCE_ARCSEC && disagreesWithGaia(speedArcsecYr, match.star);
 }
 
 export async function findMovers(
@@ -183,8 +208,9 @@ export async function findMovers(
     const [raDeg, decDeg] = gridPixelToSky(grid, source.x, source.y);
     const motionArcsec: [number, number] = [-shiftX * grid.scaleArcsec, -shiftY * grid.scaleArcsec];
     const speedArcsecYr = Math.hypot(...motionArcsec) / baselineYears;
-    const gaia = matchGaia(gaiaStars, raDeg, decDeg, mjdToYear(firstMjd));
     const shifted = probability > model.metrics.threshold && Math.hypot(shiftX, shiftY) >= MIN_SHIFT_PX;
+    const match = matchGaia(gaiaStars, raDeg, decDeg, mjdToYear(firstMjd));
+    const gaia = match && !(shifted && isPassingNeighbour(match, speedArcsecYr)) ? match.star : null;
     const ruledOutByGaia = shifted && gaia !== null && disagreesWithGaia(speedArcsecYr, gaia);
     return {
       id: `${raDeg.toFixed(5)}_${decDeg.toFixed(5)}`,

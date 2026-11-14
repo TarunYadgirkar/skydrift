@@ -58,6 +58,20 @@ The detector is a three-layer convolutional network (about 94,000 weights) that 
 
 **Real-sky test.** The detector was run on 140 stars that Gaia measures moving faster than 1″ per year. 41 of them shifted by at least half a Skydrift pixel between the first and last SPHEREx pass, which is the smallest shift the tool reports. It recovered 31 of those 41 (76%), and its speeds differ from Gaia's by a median of 11%. Of 2,130 other sources in the same fields, 10 were flagged (0.5%), before the Gaia cross-check removes the ones Gaia knows are still. The other 99 stars moved less than half a pixel in the time SPHEREx has been observing, and 9 of them were still recovered.
 
+**Challenge test targets.**
+
+| Target | Skydrift | Reference |
+|---|---|---|
+| Barnard's Star | 10.1″/yr north, known to Gaia | Gaia: 10.4″/yr |
+| Epsilon Indi B | 4.2″/yr southeast, known to Gaia | Gaia: 4.7″/yr |
+| WISE 0855−0714 | 8.0″/yr west (4.4 to 5.0 µm), 7.5″/yr west (3.8 to 4.4 µm), not in Gaia | Published: 8.1″/yr |
+| RW Aurigae | nothing moved | Variable star |
+| R Draconis | nothing moved, one glare shift ruled out by Gaia | Variable star |
+
+WISE 0855−0714 is a cold brown dwarf that Gaia cannot see. A fast source with no Gaia match is the case the tool is built to surface.
+
+The detector compares the earliest and latest passes that are deep enough. A pass built from only a few exposures is skipped, because faint sources do not show in it.
+
 The network runs in the browser in plain TypeScript, with no ML runtime to download.
 
 ## Data
@@ -96,3 +110,4 @@ Claude (Anthropic) was used as a coding assistant to write and review the code i
 - SPHEREx pixels are 6.15″ across and the survey is about 18 months old, so motion slower than roughly 1.5″ per year is below what one pair of passes can show. This improves with every new pass.
 - Very bright stars saturate. Their cores are filled in for display, and their measured motion is less precise.
 - Glare around a bright moving star can make a faint neighbour look like it moved. The Gaia cross-check rules these out when the neighbour is in Gaia.
+- A moving source that passes within about 5″ of a faint Gaia star is taken to be that star and ruled out. It shows up again in the next pass, once it has moved clear.

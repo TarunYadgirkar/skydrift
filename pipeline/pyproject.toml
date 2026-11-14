@@ -7,8 +7,11 @@ dependencies = [
     "aiohttp>=3.14.5",
     "astropy>=8.0.2",
     "numpy>=2.5.4",
+    "onnx>=1.23.2",
+    "onnxscript>=0.7.2",
     "pillow>=13.0.0",
     "scipy>=1.18.1",
+    "torch>=2.15.0",
 ]
 
 [build-system]

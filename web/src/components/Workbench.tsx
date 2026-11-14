@@ -5,8 +5,11 @@ import { useBlinkSession } from "@/hooks/useBlinkSession";
 import { addFrames, stretchFor, subtractFrames, symmetricStretch, type Palette } from "@/lib/render";
 import { BANDS, NATIVE_SCALE_ARCSEC } from "@/lib/spherex";
 import { extractSpectrum, type SpectrumPoint } from "@/lib/spectrum";
-import { formatDec, formatRa, mjdToDate, type Target } from "@/lib/target";
+import { formatDec, formatRa, mjdToDate, mjdToYear, type Target } from "@/lib/target";
+import { fetchGaiaStars, gaiaPositionAt, totalMotionMasYr, type GaiaStar } from "@/lib/gaia";
+import { findMovers, type MoverReport } from "@/lib/movers";
 import { EpochStrip } from "./EpochStrip";
+import { MoversPanel } from "./MoversPanel";
 import { PlateViewer, type Marker } from "./PlateViewer";
 import { SpectrumChart } from "./SpectrumChart";
 import { TargetForm } from "./TargetForm";
@@ -18,6 +21,7 @@ const FOV_HALF_SIZES = [24, 32, 48, 64];
 const DEFAULT_HALF = 32;
 const DEFAULT_DETECTOR = 3;
 const BLINK_INTERVAL_MS = 650;
+const FAST_STAR_MAS_YR = 150;
 const DATE_FORMAT = new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" });
 
 function fovArcmin(half: number): string {
@@ -55,12 +59,17 @@ export function Workbench() {
   const [playing, setPlaying] = useState(!reduceMotion);
   const [selection, setSelection] = useState<{ raDeg: number; decDeg: number } | null>(null);
   const [spectrum, setSpectrum] = useState<SpectrumPoint[]>([]);
+  const [gaia, setGaia] = useState<{ stars: GaiaStar[]; note: string | null }>({ stars: [], note: null });
+  const [movers, setMovers] = useState<MoverReport | null>(null);
+  const [selectedMover, setSelectedMover] = useState<string | null>(null);
 
   const start = useCallback(
     (nextQuery: string, preset: Target | undefined, nextHalf: number, nextDetector: number) => {
       setQuery(nextQuery);
       setSelection(null);
       setSpectrum([]);
+      setMovers(null);
+      setSelectedMover(null);
       setPlaying(!reduceMotion);
       const params = new URLSearchParams({ q: nextQuery, fov: String(nextHalf), band: String(nextDetector) });
       window.history.replaceState(null, "", `?${params}`);
@@ -104,6 +113,35 @@ export function Workbench() {
     };
   }, [selection, bands]);
 
+  useEffect(() => {
+    if (!session) return;
+    const controller = new AbortController();
+    const radiusDeg = (session.grid.size * session.grid.scaleArcsec) / 3600 / 2 * 1.5;
+    fetchGaiaStars(session.grid.raDeg, session.grid.decDeg, radiusDeg, controller.signal)
+      .then((stars) => setGaia({ stars, note: null }))
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) setGaia({ stars: [], note: error instanceof Error ? error.message : null });
+      });
+    return () => controller.abort();
+  }, [session]);
+
+  const lastAvailable = available.lastIndexOf(true);
+  useEffect(() => {
+    if (!session || firstAvailable < 0 || lastAvailable <= firstAvailable) return;
+    let cancelled = false;
+    const first = frames[firstAvailable];
+    const last = frames[lastAvailable];
+    if (!first || !last) return;
+    void findMovers(session.grid, first, last, session.epochs[firstAvailable].mjd, session.epochs[lastAvailable].mjd, gaia.stars)
+      .then((report) => {
+        if (!cancelled) setMovers(report);
+      })
+      .catch((error: unknown) => console.error(error));
+    return () => {
+      cancelled = true;
+    };
+  }, [session, frames, firstAvailable, lastAvailable, gaia.stars]);
+
   const view = useMemo(() => {
     const frame = frames[shownEpoch] ?? null;
     if (!frame) return { frame: null, stretch, palette };
@@ -121,7 +159,17 @@ export function Workbench() {
     return { frame, stretch, palette };
   }, [frames, shownEpoch, mode, stretch, palette, firstAvailable]);
 
-  const markers: Marker[] = selection ? [{ id: "selection", kind: "selection", ...selection }] : [];
+  const shownYear = session?.epochs[shownEpoch] ? mjdToYear(session.epochs[shownEpoch].mjd) : 2026;
+  const markers: Marker[] = [
+    ...gaia.stars
+      .filter((star) => totalMotionMasYr(star) >= FAST_STAR_MAS_YR)
+      .map((star): Marker => ({ id: `g${star.id}`, kind: "catalog", ...gaiaPositionAt(star, shownYear) })),
+    ...(movers?.candidates ?? [])
+      .filter((candidate) => candidate.isMover)
+      .map((candidate): Marker => ({ id: candidate.id, kind: "candidate", raDeg: candidate.raDeg, decDeg: candidate.decDeg, motionArcsec: candidate.motionArcsec })),
+    ...(selection ? [{ id: "selection", kind: "selection" as const, ...selection }] : []),
+  ];
+  const moversNote = session && session.epochs.length < 2 ? "SPHEREx has covered this spot only once so far, so there is nothing to compare yet." : gaia.note;
   const busy = ["resolving", "searching", "loading"].includes(state.status);
   const caption = session
     ? `${formatRa(session.grid.raDeg)}  ${formatDec(session.grid.decDeg)} · ${fovArcmin(session.halfSizePx)}′ field · ${
@@ -145,8 +193,8 @@ export function Workbench() {
         </div>
       </header>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.55fr)_minmax(320px,1fr)]">
-        <div className="flex flex-col gap-3">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(340px,1fr)]">
+        <div className="mx-auto flex w-full max-w-[max(22rem,calc(100dvh-15rem))] flex-col gap-3">
           {session && band ? (
             <>
               <PlateViewer
@@ -231,6 +279,16 @@ export function Workbench() {
               </ControlRow>
             </div>
           </Panel>
+
+          <MoversPanel
+            report={movers}
+            note={moversNote}
+            selectedId={selectedMover}
+            onSelect={(candidate) => {
+              setSelectedMover(candidate.id);
+              setSelection({ raDeg: candidate.raDeg, decDeg: candidate.decDeg });
+            }}
+          />
 
           <Panel
             title="Spectrum"

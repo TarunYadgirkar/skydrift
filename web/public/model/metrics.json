@@ -1,0 +1,94 @@
+{
+  "recall_at_1pct_false_alarms": 0.9424183964729309,
+  "recall_below_1px_shift": 0.7876105904579163,
+  "median_shift_error_px": 0.3924384117126465,
+  "threshold": 0.7483023405075073,
+  "accuracy": 0.972000002861023,
+  "star_pairs": 1307,
+  "fields": 73,
+  "held_out_pairs": 250,
+  "layers": [
+    {
+      "name": "features.0.weight",
+      "shape": [
+        24,
+        3,
+        3,
+        3
+      ],
+      "offset": 0
+    },
+    {
+      "name": "features.0.bias",
+      "shape": [
+        24
+      ],
+      "offset": 648
+    },
+    {
+      "name": "features.2.weight",
+      "shape": [
+        48,
+        24,
+        3,
+        3
+      ],
+      "offset": 672
+    },
+    {
+      "name": "features.2.bias",
+      "shape": [
+        48
+      ],
+      "offset": 11040
+    },
+    {
+      "name": "features.5.weight",
+      "shape": [
+        64,
+        48,
+        3,
+        3
+      ],
+      "offset": 11088
+    },
+    {
+      "name": "features.5.bias",
+      "shape": [
+        64
+      ],
+      "offset": 38736
+    },
+    {
+      "name": "head.1.weight",
+      "shape": [
+        96,
+        576
+      ],
+      "offset": 38800
+    },
+    {
+      "name": "head.1.bias",
+      "shape": [
+        96
+      ],
+      "offset": 94096
+    },
+    {
+      "name": "head.3.weight",
+      "shape": [
+        3,
+        96
+      ],
+      "offset": 94192
+    },
+    {
+      "name": "head.3.bias",
+      "shape": [
+        3
+      ],
+      "offset": 94480
+    }
+  ],
+  "stamp": 15
+}

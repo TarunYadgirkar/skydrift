@@ -1,5 +1,6 @@
 import { gaiaPositionAt, totalMotionMasYr, type GaiaStar } from "./gaia";
 import { loadMoverModel, type ModelMetrics } from "./moverModel";
+import { fillSaturatedCores, stretchFor } from "./render";
 import { gridPixelToSky, median, type Grid } from "./resample";
 import { mjdToYear } from "./target";
 
@@ -13,7 +14,8 @@ const STATIC_SHIFT_PX = 1;
 const GAIA_MATCH_ARCSEC = 9;
 const CUBIC_A = -0.75;
 const DUPLICATE_RADIUS_PX = 5;
-const SATURATION_CHECK_HALF = 4;
+const GAIA_DISAGREEMENT_ARCSEC_YR = 1;
+const GAIA_DISAGREEMENT_FRACTION = 0.5;
 
 export interface DetectedSource {
   x: number;
@@ -32,6 +34,8 @@ export interface MoverCandidate {
   snr: number;
   gaia: GaiaStar | null;
   isMover: boolean;
+  /** The image shows a shift, but Gaia's measured motion for this star rules it out. */
+  ruledOutByGaia: boolean;
 }
 
 export interface MoverReport {
@@ -71,17 +75,6 @@ export function detectSources(frame: Float32Array, size: number): DetectedSource
     }
   }
   return sources;
-}
-
-function isFullyMeasured(frame: Float32Array, size: number, source: DetectedSource): boolean {
-  const col = Math.round(source.x);
-  const row = Math.round(source.y);
-  for (let dy = -SATURATION_CHECK_HALF; dy <= SATURATION_CHECK_HALF; dy++) {
-    for (let dx = -SATURATION_CHECK_HALF; dx <= SATURATION_CHECK_HALF; dx++) {
-      if (!Number.isFinite(frame[(row + dy) * size + col + dx])) return false;
-    }
-  }
-  return true;
 }
 
 function dropDuplicates(sources: DetectedSource[]): DetectedSource[] {
@@ -171,12 +164,12 @@ export async function findMovers(
 ): Promise<MoverReport> {
   const model = await loadMoverModel();
   const baselineYears = (lastMjd - firstMjd) / 365.25;
-  const sources = dropDuplicates(detectSources(first, grid.size)).filter(
-    (source) => isFullyMeasured(first, grid.size, source) && isFullyMeasured(last, grid.size, source),
-  );
+  const firstFilled = capSaturatedCores(first, grid.size);
+  const lastFilled = capSaturatedCores(last, grid.size);
+  const sources = dropDuplicates(detectSources(firstFilled, grid.size));
   const raw = sources.map((source) => {
     const [logit, dx, dy] = model.predict(
-      buildInput(sampleStamp(first, grid.size, source.x, source.y), sampleStamp(last, grid.size, source.x, source.y)),
+      buildInput(sampleStamp(firstFilled, grid.size, source.x, source.y), sampleStamp(lastFilled, grid.size, source.x, source.y)),
     );
     return { source, probability: 1 / (1 + Math.exp(-logit)), dx, dy };
   });
@@ -190,6 +183,9 @@ export async function findMovers(
     const [raDeg, decDeg] = gridPixelToSky(grid, source.x, source.y);
     const motionArcsec: [number, number] = [-shiftX * grid.scaleArcsec, -shiftY * grid.scaleArcsec];
     const speedArcsecYr = Math.hypot(...motionArcsec) / baselineYears;
+    const gaia = matchGaia(gaiaStars, raDeg, decDeg, mjdToYear(firstMjd));
+    const shifted = probability > model.metrics.threshold && Math.hypot(shiftX, shiftY) >= MIN_SHIFT_PX;
+    const ruledOutByGaia = shifted && gaia !== null && disagreesWithGaia(speedArcsecYr, gaia);
     return {
       id: `${raDeg.toFixed(5)}_${decDeg.toFixed(5)}`,
       raDeg,
@@ -198,12 +194,27 @@ export async function findMovers(
       motionArcsec,
       speedArcsecYr,
       snr: source.snr,
-      gaia: matchGaia(gaiaStars, raDeg, decDeg, mjdToYear(firstMjd)),
-      isMover: probability > model.metrics.threshold && Math.hypot(shiftX, shiftY) >= MIN_SHIFT_PX,
+      gaia,
+      isMover: shifted && !ruledOutByGaia,
+      ruledOutByGaia,
     };
   });
   candidates.sort((p, q) => Number(q.isMover) - Number(p.isMover) || q.probability - p.probability);
   return { candidates, sourcesChecked: sources.length, baselineYears, metrics: model.metrics };
+}
+
+function disagreesWithGaia(measuredArcsecYr: number, star: GaiaStar): boolean {
+  const difference = Math.abs(measuredArcsecYr - gaiaSpeedArcsecYr(star));
+  return difference > Math.max(GAIA_DISAGREEMENT_ARCSEC_YR, GAIA_DISAGREEMENT_FRACTION * measuredArcsecYr);
+}
+
+/** Saturated cores are missing pixels. Fill them with the frame's brightest value so the star is one solid blob. */
+function capSaturatedCores(frame: Float32Array, size: number): Float32Array {
+  let brightest = 0;
+  for (const value of frame) if (Number.isFinite(value) && value > brightest) brightest = value;
+  const filled = fillSaturatedCores(frame, size, stretchFor([frame]).high);
+  for (let i = 0; i < filled.length; i++) if (filled[i] === Infinity) filled[i] = brightest;
+  return filled;
 }
 
 export function gaiaSpeedArcsecYr(star: GaiaStar): number {

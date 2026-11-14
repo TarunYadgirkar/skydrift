@@ -37,6 +37,7 @@ function CatalogPill({ candidate }: { candidate: MoverCandidate }) {
 
 export function MoversPanel({ report, note, selectedId, onSelect }: MoversPanelProps) {
   const movers = report?.candidates.filter((candidate) => candidate.isMover) ?? [];
+  const ruledOut = report?.candidates.filter((candidate) => candidate.ruledOutByGaia).length ?? 0;
   return (
     <Panel title="What moved" aside={report ? `${report.sourcesChecked} sources checked over ${report.baselineYears.toFixed(1)} yr` : undefined}>
       {!report ? (
@@ -71,6 +72,12 @@ export function MoversPanel({ report, note, selectedId, onSelect }: MoversPanelP
           ))}
         </ul>
       )}
+      {ruledOut > 0 ? (
+        <p className="text-sm text-muted">
+          {ruledOut === 1 ? "1 apparent shift was" : `${ruledOut} apparent shifts were`} ruled out because Gaia measures{" "}
+          {ruledOut === 1 ? "that star" : "those stars"} as nearly still. Glare from a bright neighbour is the usual cause.
+        </p>
+      ) : null}
       {report ? (
         <p className="text-2xs text-muted">
           The detector learned from {report.metrics.star_pairs.toLocaleString("en")} real SPHEREx star pairs that were slid by known

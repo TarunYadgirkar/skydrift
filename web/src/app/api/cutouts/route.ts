@@ -7,7 +7,10 @@ import {
   type CutoutMeta,
   type CutoutRequestItem,
 } from "@/lib/spherex";
+import { rateLimited } from "@/lib/rateLimit";
 import { wcsFromCards } from "@/lib/wcs";
+
+export const maxDuration = 60;
 
 const CARD = 80;
 const BLOCK = 2880;
@@ -15,6 +18,12 @@ const HEADER_BYTES = 31680;
 const LONG_HEADER_BYTES = 60480;
 const BYTES_PER_PIXEL = 4;
 const RETRIES = 3;
+const FETCH_TIMEOUT_MS = 15000;
+const MAX_BODY_BYTES = 16384;
+const REQUESTS_PER_MINUTE = 240;
+const PARTIAL_CONTENT = 206;
+
+class PermanentError extends Error {}
 
 interface ParsedHeader {
   cards: Map<string, number>;
@@ -24,11 +33,17 @@ interface ParsedHeader {
 async function readRange(key: string, start: number, end: number): Promise<Uint8Array> {
   for (let attempt = 0; ; attempt++) {
     try {
-      const response = await fetch(BUCKET_URL + key, { headers: { Range: `bytes=${start}-${end}` } });
-      if (!response.ok) throw new Error(`Bucket returned ${response.status}`);
-      return new Uint8Array(await response.arrayBuffer());
+      const response = await fetch(BUCKET_URL + key, {
+        headers: { Range: `bytes=${start}-${end}` },
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+      if (response.status === PARTIAL_CONTENT) return new Uint8Array(await response.arrayBuffer());
+      await response.body?.cancel();
+      const retryable = response.status >= 500 || response.status === 429;
+      if (!retryable) throw new PermanentError(`Bucket returned ${response.status}`);
+      throw new Error(`Bucket returned ${response.status}`);
     } catch (error) {
-      if (attempt === RETRIES - 1) throw error;
+      if (error instanceof PermanentError || attempt === RETRIES - 1) throw error;
       await new Promise((resolve) => setTimeout(resolve, 200 * 2 ** attempt));
     }
   }
@@ -107,6 +122,11 @@ function isValidItem(value: unknown): value is CutoutRequestItem {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  const limited = rateLimited(request, "cutouts", REQUESTS_PER_MINUTE);
+  if (limited) return limited;
+  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
+    return Response.json({ error: "Request body is too large." }, { status: 413 });
+  }
   const body: unknown = await request.json().catch(() => null);
   const { items, half } = (body ?? {}) as { items?: unknown; half?: unknown };
   if (

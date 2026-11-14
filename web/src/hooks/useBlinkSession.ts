@@ -19,18 +19,9 @@ export interface BlinkState {
   session: Session | null;
   bands: Map<number, BandFrames>;
   progress: Progress | null;
-  backgroundBandsLoaded: number;
 }
 
-const INITIAL: BlinkState = {
-  status: "idle",
-  error: null,
-  target: null,
-  session: null,
-  bands: new Map(),
-  progress: null,
-  backgroundBandsLoaded: 0,
-};
+const INITIAL: BlinkState = { status: "idle", error: null, target: null, session: null, bands: new Map(), progress: null };
 
 export interface OpenRequest {
   query: string;
@@ -39,46 +30,82 @@ export interface OpenRequest {
   detector: number;
 }
 
+interface Run {
+  controller: AbortController;
+  session: Session | null;
+  loads: Map<number, Promise<BandFrames>>;
+}
+
 export function useBlinkSession() {
   const [state, setState] = useState<BlinkState>(INITIAL);
-  const abortRef = useRef<AbortController | null>(null);
+  const runRef = useRef<Run | null>(null);
 
-  const open = useCallback(async ({ query, preset, halfSizePx, detector }: OpenRequest) => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const { signal } = controller;
-    const update = (patch: Partial<BlinkState>) => {
-      if (!signal.aborted) setState((previous) => ({ ...previous, ...patch }));
-    };
-    setState({ ...INITIAL, status: "resolving" });
-    try {
-      const target = preset ?? (await resolveTarget(query));
-      const center = positionAtYear(target, SPHEREX_MID_YEAR);
-      update({ target, status: "searching" });
-      const session = await openSession(center.raDeg, center.decDeg, halfSizePx);
-      if (session.exposures.length === 0) {
-        update({ session, status: "empty" });
-        return;
+  const loadInto = useCallback((run: Run, detector: number, onProgress: (loaded: number, total: number) => void) => {
+    const existing = run.loads.get(detector);
+    if (existing || !run.session) return existing ?? null;
+    const load = loadBand(run.session, detector, run.controller.signal, onProgress).then((frames) => {
+      if (!run.controller.signal.aborted) {
+        setState((previous) => ({ ...previous, bands: new Map(previous.bands).set(detector, frames) }));
       }
-      update({ session, status: "loading", progress: { loaded: 0, total: 0 } });
-      const bands = new Map<number, BandFrames>();
-      const first = await loadBand(session, detector, signal, (loaded, total) => update({ progress: { loaded, total } }));
-      bands.set(detector, first);
-      update({ bands: new Map(bands), status: "ready", progress: null, backgroundBandsLoaded: 1 });
-      for (const band of BANDS) {
-        if (band.detector === detector || signal.aborted) continue;
-        bands.set(band.detector, await loadBand(session, band.detector, signal, () => undefined));
-        update({ bands: new Map(bands), backgroundBandsLoaded: bands.size });
-      }
-    } catch (error) {
-      if (signal.aborted) return;
-      console.error(error);
-      update({ status: "error", error: error instanceof Error ? error.message : "Something went wrong. Try again." });
-    }
+      return frames;
+    });
+    run.loads.set(detector, load);
+    return load;
   }, []);
 
-  useEffect(() => () => abortRef.current?.abort(), []);
+  const open = useCallback(
+    async ({ query, preset, halfSizePx, detector }: OpenRequest) => {
+      runRef.current?.controller.abort();
+      const run: Run = { controller: new AbortController(), session: null, loads: new Map() };
+      runRef.current = run;
+      const { signal } = run.controller;
+      const update = (patch: Partial<BlinkState>) => {
+        if (!signal.aborted) setState((previous) => ({ ...previous, ...patch }));
+      };
+      setState({ ...INITIAL, status: "resolving" });
+      try {
+        const target = preset ?? (await resolveTarget(query));
+        const center = positionAtYear(target, SPHEREX_MID_YEAR);
+        update({ target, status: "searching" });
+        const session = await openSession(center.raDeg, center.decDeg, halfSizePx);
+        run.session = session;
+        if (session.exposures.length === 0) {
+          update({ session, status: "empty" });
+          return;
+        }
+        update({ session, status: "loading", progress: { loaded: 0, total: 0 } });
+        await loadInto(run, detector, (loaded, total) => update({ progress: { loaded, total } }));
+        update({ status: "ready", progress: null });
+      } catch (error) {
+        if (signal.aborted) return;
+        console.error(error);
+        update({ status: "error", error: error instanceof Error ? error.message : "Something went wrong. Try again." });
+        return;
+      }
+      for (const band of BANDS) {
+        if (signal.aborted) return;
+        try {
+          await loadInto(run, band.detector, () => undefined);
+        } catch (error) {
+          if (!signal.aborted) console.error(`band ${band.detector} failed to load`, error);
+        }
+      }
+    },
+    [loadInto],
+  );
 
-  return { state, open };
+  const ensureBand = useCallback(
+    (detector: number) => {
+      const run = runRef.current;
+      if (!run?.session || run.controller.signal.aborted) return;
+      loadInto(run, detector, () => undefined)?.catch((error: unknown) => {
+        if (!run.controller.signal.aborted) console.error(`band ${detector} failed to load`, error);
+      });
+    },
+    [loadInto],
+  );
+
+  useEffect(() => () => runRef.current?.controller.abort(), []);
+
+  return { state, open, ensureBand };
 }

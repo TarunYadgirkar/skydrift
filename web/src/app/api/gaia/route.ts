@@ -1,16 +1,24 @@
 import type { GaiaStar } from "@/lib/gaia";
+import { rateLimited } from "@/lib/rateLimit";
+
+export const maxDuration = 30;
 
 const GAIA_TAP_URL = "https://gea.esac.esa.int/tap-server/tap/sync";
 const MAX_RADIUS_DEG = 0.25;
 const MAX_STARS = 400;
 const FAINT_LIMIT_MAG = 19;
+const REQUESTS_PER_MINUTE = 30;
 
 function readNumber(params: URLSearchParams, name: string, min: number, max: number): number | null {
-  const value = Number(params.get(name));
-  return params.has(name) && Number.isFinite(value) && value >= min && value <= max ? value : null;
+  const raw = params.get(name)?.trim();
+  if (!raw) return null;
+  const value = Number(raw);
+  return Number.isFinite(value) && value >= min && value <= max ? value : null;
 }
 
 export async function GET(request: Request): Promise<Response> {
+  const limited = rateLimited(request, "gaia", REQUESTS_PER_MINUTE);
+  if (limited) return limited;
   const params = new URL(request.url).searchParams;
   const ra = readNumber(params, "ra", 0, 360);
   const dec = readNumber(params, "dec", -90, 90);
@@ -35,7 +43,7 @@ export async function GET(request: Request): Promise<Response> {
       pmDecMasYr: Number(pmDec ?? 0),
       gMag: Number(gMag),
     }));
-    return Response.json(stars, { headers: { "Cache-Control": "public, max-age=86400" } });
+    return Response.json(stars, { headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } });
   } catch (error) {
     console.error("gaia: catalog query failed", error);
     return Response.json({ error: "The Gaia catalog did not respond." }, { status: 502 });

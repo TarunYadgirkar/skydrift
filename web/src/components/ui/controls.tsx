@@ -38,15 +38,14 @@ interface SegmentedProps<T extends string | number> {
 
 export function Segmented<T extends string | number>({ label, value, options, onChange }: SegmentedProps<T>) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex flex-wrap gap-0.5 rounded-control bg-line/60 p-0.5">
+    <div role="group" aria-label={label} className="inline-flex flex-wrap gap-0.5 rounded-control bg-line/60 p-0.5">
       {options.map((option) => {
         const selected = option.value === value;
         return (
           <button
             key={String(option.value)}
             type="button"
-            role="radio"
-            aria-checked={selected}
+            aria-pressed={selected}
             disabled={option.disabled}
             title={option.hint}
             onClick={() => onChange(option.value)}

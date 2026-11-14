@@ -43,6 +43,7 @@ function mix(from: [number, number, number], to: [number, number, number], t: nu
 }
 
 function colorFor(value: number, stretch: Stretch, palette: Palette): [number, number, number] {
+  if (value === Infinity) return palette === "sky" ? [255, 255, 255] : PLATE_DARK;
   if (!Number.isFinite(value)) return palette === "sky" ? [38, 50, 61] : [214, 220, 225];
   if (palette === "difference") {
     const t = Math.max(-1, Math.min(1, value / stretch.high));
@@ -53,6 +54,27 @@ function colorFor(value: number, stretch: Stretch, palette: Palette): [number, n
   return palette === "plate" ? mix(PLATE_LIGHT, PLATE_DARK, t) : mix(PLATE_DARK, [255, 255, 255], t);
 }
 
+const SATURATION_FILL_PASSES = 12;
+
+/** Saturated star cores arrive as missing pixels. Mark the ones enclosed by bright pixels so they draw as bright, not blank. */
+export function fillSaturatedCores(frame: Float32Array, size: number, brightLevel: number): Float32Array {
+  const out = Float32Array.from(frame);
+  for (let pass = 0; pass < SATURATION_FILL_PASSES; pass++) {
+    const filled: number[] = [];
+    for (let row = 1; row < size - 1; row++) {
+      for (let col = 1; col < size - 1; col++) {
+        const i = row * size + col;
+        if (!Number.isNaN(out[i])) continue;
+        const neighbours = [out[i - 1], out[i + 1], out[i - size], out[i + size]];
+        if (neighbours.some((value) => value >= brightLevel)) filled.push(i);
+      }
+    }
+    if (filled.length === 0) break;
+    for (const i of filled) out[i] = Infinity;
+  }
+  return out;
+}
+
 export function paintFrame(
   context: CanvasRenderingContext2D,
   frame: Float32Array,
@@ -61,8 +83,9 @@ export function paintFrame(
   palette: Palette,
 ): void {
   const image = context.createImageData(size, size);
+  const pixels = palette === "difference" ? frame : fillSaturatedCores(frame, size, stretch.high);
   for (let i = 0; i < frame.length; i++) {
-    const [r, g, b] = colorFor(frame[i], stretch, palette);
+    const [r, g, b] = colorFor(pixels[i], stretch, palette);
     image.data[i * 4] = r;
     image.data[i * 4 + 1] = g;
     image.data[i * 4 + 2] = b;

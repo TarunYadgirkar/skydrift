@@ -8,11 +8,12 @@ import { extractSpectrum, type SpectrumPoint } from "@/lib/spectrum";
 import { formatDec, formatRa, mjdToDate, mjdToYear, type Target } from "@/lib/target";
 import { fetchGaiaStars, gaiaPositionAt, totalMotionMasYr, type GaiaStar } from "@/lib/gaia";
 import { findMovers, type MoverReport } from "@/lib/movers";
+import type { Session } from "@/lib/session";
 import { EpochStrip } from "./EpochStrip";
 import { MoversPanel } from "./MoversPanel";
 import { PlateViewer, type Marker } from "./PlateViewer";
 import { SpectrumChart } from "./SpectrumChart";
-import { TargetForm } from "./TargetForm";
+import { PRESETS, TargetForm } from "./TargetForm";
 import { Panel, Segmented } from "./ui/controls";
 
 type Mode = "blink" | "subtract" | "add";
@@ -22,10 +23,15 @@ const DEFAULT_HALF = 32;
 const DEFAULT_DETECTOR = 3;
 const BLINK_INTERVAL_MS = 650;
 const FAST_STAR_MAS_YR = 150;
+const EMPTY_GAIA: { stars: GaiaStar[]; note: string | null } = { stars: [], note: null };
 const DATE_FORMAT = new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" });
 
 function fovArcmin(half: number): string {
   return ((2 * half * NATIVE_SCALE_ARCSEC * 0.7) / 60).toFixed(1);
+}
+
+function presetTarget(query: string): Target | undefined {
+  return PRESETS.find((preset) => preset.query.toLowerCase() === query.trim().toLowerCase())?.target;
 }
 
 function readParams() {
@@ -37,7 +43,7 @@ function readParams() {
   return {
     query: ra && dec ? `${ra} ${dec}` : (params.get("q") ?? ""),
     half: FOV_HALF_SIZES.includes(half) ? half : DEFAULT_HALF,
-    detector: band >= 1 && band <= 6 ? band : DEFAULT_DETECTOR,
+    detector: Number.isInteger(band) && band >= 1 && band <= 6 ? band : DEFAULT_DETECTOR,
   };
 }
 
@@ -47,7 +53,7 @@ const STATUS_COPY: Record<string, string> = {
 };
 
 export function Workbench() {
-  const { state, open } = useBlinkSession();
+  const { state, open, ensureBand } = useBlinkSession();
   const [initial] = useState(readParams);
   const [reduceMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [query, setQuery] = useState(initial.query);
@@ -59,8 +65,8 @@ export function Workbench() {
   const [playing, setPlaying] = useState(!reduceMotion);
   const [selection, setSelection] = useState<{ raDeg: number; decDeg: number } | null>(null);
   const [spectrum, setSpectrum] = useState<SpectrumPoint[]>([]);
-  const [gaia, setGaia] = useState<{ stars: GaiaStar[]; note: string | null }>({ stars: [], note: null });
-  const [movers, setMovers] = useState<MoverReport | null>(null);
+  const [gaiaResult, setGaiaResult] = useState<{ session: Session; stars: GaiaStar[]; note: string | null } | null>(null);
+  const [moversResult, setMoversResult] = useState<{ frames: (Float32Array | null)[]; report: MoverReport } | null>(null);
   const [selectedMover, setSelectedMover] = useState<string | null>(null);
 
   const start = useCallback(
@@ -68,18 +74,19 @@ export function Workbench() {
       setQuery(nextQuery);
       setSelection(null);
       setSpectrum([]);
-      setMovers(null);
       setSelectedMover(null);
       setPlaying(!reduceMotion);
       const params = new URLSearchParams({ q: nextQuery, fov: String(nextHalf), band: String(nextDetector) });
       window.history.replaceState(null, "", `?${params}`);
-      void open({ query: nextQuery, preset, halfSizePx: nextHalf, detector: nextDetector });
+      void open({ query: nextQuery, preset: preset ?? presetTarget(nextQuery), halfSizePx: nextHalf, detector: nextDetector });
     },
     [open, reduceMotion],
   );
 
   useEffect(() => {
-    if (initial.query) void open({ query: initial.query, halfSizePx: initial.half, detector: initial.detector });
+    if (initial.query) {
+      void open({ query: initial.query, preset: presetTarget(initial.query), halfSizePx: initial.half, detector: initial.detector });
+    }
   }, [open, initial]);
 
   const { session, bands, target } = state;
@@ -90,6 +97,8 @@ export function Workbench() {
   const stretch = useMemo(() => stretchFor(frames), [frames]);
   const firstAvailable = available.indexOf(true);
   const shownEpoch = available[epoch] ? epoch : Math.max(firstAvailable, 0);
+  const gaia = gaiaResult && gaiaResult.session === session ? gaiaResult : EMPTY_GAIA;
+  const movers = moversResult && moversResult.frames === frames ? moversResult.report : null;
 
   useEffect(() => {
     if (!playing || mode === "add") return;
@@ -105,9 +114,11 @@ export function Workbench() {
     if (!selection) return;
     let cancelled = false;
     const stamps = [...bands.values()].flatMap((b) => b.stamps);
-    void extractSpectrum(stamps, selection.raDeg, selection.decDeg).then((points) => {
-      if (!cancelled) setSpectrum(points);
-    });
+    extractSpectrum(stamps, selection.raDeg, selection.decDeg)
+      .then((points) => {
+        if (!cancelled) setSpectrum(points);
+      })
+      .catch((error: unknown) => console.error(error));
     return () => {
       cancelled = true;
     };
@@ -118,9 +129,9 @@ export function Workbench() {
     const controller = new AbortController();
     const radiusDeg = (session.grid.size * session.grid.scaleArcsec) / 3600 / 2 * 1.5;
     fetchGaiaStars(session.grid.raDeg, session.grid.decDeg, radiusDeg, controller.signal)
-      .then((stars) => setGaia({ stars, note: null }))
+      .then((stars) => setGaiaResult({ session, stars, note: null }))
       .catch((error: unknown) => {
-        if (!controller.signal.aborted) setGaia({ stars: [], note: error instanceof Error ? error.message : null });
+        if (!controller.signal.aborted) setGaiaResult({ session, stars: [], note: error instanceof Error ? error.message : null });
       });
     return () => controller.abort();
   }, [session]);
@@ -134,7 +145,7 @@ export function Workbench() {
     if (!first || !last) return;
     void findMovers(session.grid, first, last, session.epochs[firstAvailable].mjd, session.epochs[lastAvailable].mjd, gaia.stars)
       .then((report) => {
-        if (!cancelled) setMovers(report);
+        if (!cancelled) setMoversResult({ frames, report });
       })
       .catch((error: unknown) => console.error(error));
     return () => {
@@ -195,7 +206,11 @@ export function Workbench() {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(340px,1fr)]">
         <div className="mx-auto flex w-full max-w-[max(22rem,calc(100dvh-15rem))] flex-col gap-3">
-          {session && band ? (
+          {session && band && firstAvailable < 0 ? (
+            <PlateMessage>SPHEREx has no images of this spot in this wavelength band. Pick another band.</PlateMessage>
+          ) : session && !band && state.status === "ready" ? (
+            <PlateMessage>Loading this wavelength band…</PlateMessage>
+          ) : session && band ? (
             <>
               <PlateViewer
                 grid={session.grid}
@@ -245,8 +260,9 @@ export function Workbench() {
                   value={detector}
                   onChange={(next) => {
                     setDetector(next);
-                    if (session && !bands.has(next)) start(query, target ?? undefined, half, next);
-                    else window.history.replaceState(null, "", `?${new URLSearchParams({ q: query, fov: String(half), band: String(next) })}`);
+                    setSelectedMover(null);
+                    ensureBand(next);
+                    window.history.replaceState(null, "", `?${new URLSearchParams({ q: query, fov: String(half), band: String(next) })}`);
                   }}
                   options={BANDS.map((b) => ({
                     value: b.detector,
@@ -292,11 +308,11 @@ export function Workbench() {
 
           <Panel
             title="Spectrum"
-            aside={session && state.backgroundBandsLoaded < BANDS.length && state.status === "ready" ? `Loading bands ${state.backgroundBandsLoaded} of ${BANDS.length}` : undefined}
+            aside={session && bands.size < BANDS.length && state.status === "ready" ? `Loading bands ${bands.size} of ${BANDS.length}` : undefined}
           >
             {selection && spectrum.length > 0 ? (
               <>
-                <p className="font-mono text-2xs text-muted">
+                <p className="font-mono text-2xs text-muted" aria-live="polite">
                   {formatRa(selection.raDeg)} {formatDec(selection.decDeg)} · {spectrum.length} exposures
                 </p>
                 <SpectrumChart points={spectrum} epochLabels={epochLabels} />
@@ -312,6 +328,16 @@ export function Workbench() {
         </div>
       </div>
     </main>
+  );
+}
+
+function PlateMessage({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex aspect-square w-full items-center justify-center rounded-panel bg-[#dfe5e9] p-8 text-center shadow-panel">
+      <p role="status" className="max-w-[42ch] text-sm text-muted">
+        {children}
+      </p>
+    </div>
   );
 }
 
@@ -349,7 +375,7 @@ function PlatePlaceholder({ status, error, progress }: PlaceholderProps) {
       </p>
       {status === "loading" ? (
         <div className="h-1.5 w-56 overflow-hidden rounded-full bg-line" role="progressbar" aria-valuenow={Math.round(fraction * 100)} aria-valuemin={0} aria-valuemax={100} aria-label="Exposures fetched">
-          <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${fraction * 100}%` }} />
+          <div className="h-full origin-left rounded-full bg-accent" style={{ transform: `scaleX(${fraction})` }} />
         </div>
       ) : null}
     </div>

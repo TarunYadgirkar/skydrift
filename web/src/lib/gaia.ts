@@ -23,7 +23,7 @@ export function totalMotionMasYr(star: GaiaStar): number {
 }
 
 export async function fetchGaiaStars(raDeg: number, decDeg: number, radiusDeg: number, signal?: AbortSignal): Promise<GaiaStar[]> {
-  const params = new URLSearchParams({ ra: raDeg.toFixed(6), dec: decDeg.toFixed(6), radius: radiusDeg.toFixed(4) });
+  const params = new URLSearchParams({ ra: raDeg.toFixed(4), dec: decDeg.toFixed(4), radius: radiusDeg.toFixed(3) });
   const response = await fetch(`/api/gaia?${params}`, { signal });
   if (!response.ok) throw new Error("The Gaia catalog did not respond, so known stars are not marked.");
   return (await response.json()) as GaiaStar[];

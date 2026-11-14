@@ -38,10 +38,15 @@ function loadManifest() {
 function loadShard(name: string): Promise<ArrayBuffer> {
   let cached = shardCache.get(name);
   if (!cached) {
-    cached = fetch(`${INDEX_BASE}/${name}.bin`).then((response) => {
-      if (!response.ok) throw new Error("Part of the sky index could not be loaded. Reload the page to try again.");
-      return response.arrayBuffer();
-    });
+    cached = fetch(`${INDEX_BASE}/${name}.bin`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Part of the sky index could not be loaded. Try again in a moment.");
+        return response.arrayBuffer();
+      })
+      .catch((error: unknown) => {
+        shardCache.delete(name);
+        throw error;
+      });
     shardCache.set(name, cached);
   }
   return cached;

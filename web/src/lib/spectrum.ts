@@ -23,10 +23,15 @@ export interface SpectrumPoint {
 let tablePromise: Promise<WavelengthTable> | null = null;
 
 export function loadWavelengths(): Promise<WavelengthTable> {
-  tablePromise ??= fetch("/wavelengths.json").then((response) => {
-    if (!response.ok) throw new Error("The wavelength calibration could not be loaded.");
-    return response.json() as Promise<WavelengthTable>;
-  });
+  tablePromise ??= fetch("/wavelengths.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("The wavelength calibration could not be loaded.");
+      return response.json() as Promise<WavelengthTable>;
+    })
+    .catch((error: unknown) => {
+      tablePromise = null;
+      throw error;
+    });
   return tablePromise;
 }
 

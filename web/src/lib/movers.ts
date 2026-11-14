@@ -13,6 +13,7 @@ const STATIC_SHIFT_PX = 1;
 const GAIA_MATCH_ARCSEC = 9;
 const CUBIC_A = -0.75;
 const DUPLICATE_RADIUS_PX = 5;
+const SATURATION_CHECK_HALF = 4;
 
 export interface DetectedSource {
   x: number;
@@ -70,6 +71,17 @@ export function detectSources(frame: Float32Array, size: number): DetectedSource
     }
   }
   return sources;
+}
+
+function isFullyMeasured(frame: Float32Array, size: number, source: DetectedSource): boolean {
+  const col = Math.round(source.x);
+  const row = Math.round(source.y);
+  for (let dy = -SATURATION_CHECK_HALF; dy <= SATURATION_CHECK_HALF; dy++) {
+    for (let dx = -SATURATION_CHECK_HALF; dx <= SATURATION_CHECK_HALF; dx++) {
+      if (!Number.isFinite(frame[(row + dy) * size + col + dx])) return false;
+    }
+  }
+  return true;
 }
 
 function dropDuplicates(sources: DetectedSource[]): DetectedSource[] {
@@ -159,7 +171,9 @@ export async function findMovers(
 ): Promise<MoverReport> {
   const model = await loadMoverModel();
   const baselineYears = (lastMjd - firstMjd) / 365.25;
-  const sources = dropDuplicates(detectSources(first, grid.size));
+  const sources = dropDuplicates(detectSources(first, grid.size)).filter(
+    (source) => isFullyMeasured(first, grid.size, source) && isFullyMeasured(last, grid.size, source),
+  );
   const raw = sources.map((source) => {
     const [logit, dx, dy] = model.predict(
       buildInput(sampleStamp(first, grid.size, source.x, source.y), sampleStamp(last, grid.size, source.x, source.y)),
@@ -170,14 +184,14 @@ export async function findMovers(
   const offsetX = still.length ? median(still.map((r) => r.dx)) : 0;
   const offsetY = still.length ? median(still.map((r) => r.dy)) : 0;
 
-  const candidates = raw.map(({ source, probability, dx, dy }, i): MoverCandidate => {
+  const candidates = raw.map(({ source, probability, dx, dy }): MoverCandidate => {
     const shiftX = dx - offsetX;
     const shiftY = dy - offsetY;
     const [raDeg, decDeg] = gridPixelToSky(grid, source.x, source.y);
     const motionArcsec: [number, number] = [-shiftX * grid.scaleArcsec, -shiftY * grid.scaleArcsec];
     const speedArcsecYr = Math.hypot(...motionArcsec) / baselineYears;
     return {
-      id: `m${i}`,
+      id: `${raDeg.toFixed(5)}_${decDeg.toFixed(5)}`,
       raDeg,
       decDeg,
       probability,

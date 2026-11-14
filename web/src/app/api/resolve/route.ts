@@ -1,7 +1,11 @@
+import { rateLimited } from "@/lib/rateLimit";
 import { CATALOG_EPOCH_YEAR, type Target } from "@/lib/target";
+
+export const maxDuration = 30;
 
 const SESAME_URL = "https://cds.unistra.fr/cgi-bin/nph-sesame/-ox/SNV?";
 const MAX_NAME_LENGTH = 80;
+const REQUESTS_PER_MINUTE = 30;
 const NAME_PATTERN = /^[\p{L}\p{N} .+\-_'*()\[\]]+$/u;
 
 function tagValue(xml: string, tag: string): number | null {
@@ -11,6 +15,8 @@ function tagValue(xml: string, tag: string): number | null {
 }
 
 export async function GET(request: Request): Promise<Response> {
+  const limited = rateLimited(request, "resolve", REQUESTS_PER_MINUTE);
+  if (limited) return limited;
   const name = new URL(request.url).searchParams.get("name")?.trim() ?? "";
   if (!name || name.length > MAX_NAME_LENGTH || !NAME_PATTERN.test(name)) {
     return Response.json({ error: "Enter an object name of up to 80 letters, digits and spaces." }, { status: 400 });
@@ -35,5 +41,5 @@ export async function GET(request: Request): Promise<Response> {
     pmDecMasYr: tagValue(xml, "pmDE") ?? 0,
     epochYear: CATALOG_EPOCH_YEAR,
   };
-  return Response.json(target, { headers: { "Cache-Control": "public, max-age=86400" } });
+  return Response.json(target, { headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } });
 }

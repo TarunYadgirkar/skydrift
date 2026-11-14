@@ -62,6 +62,11 @@ export function PlateViewer({ grid, frame, stretch, palette, markers, caption, o
       ArrowUp: [0, -KEY_STEP_PX],
       ArrowDown: [0, KEY_STEP_PX],
     };
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectAt(cursorRef.current[0], cursorRef.current[1]);
+      return;
+    }
     const move = moves[event.key];
     if (!move) return;
     event.preventDefault();
@@ -77,7 +82,7 @@ export function PlateViewer({ grid, frame, stretch, palette, markers, caption, o
       <div
         role="application"
         tabIndex={0}
-        aria-label="Sky image. Click a source, or use the arrow keys, to read its spectrum."
+        aria-label="Sky image. Click a source to read its spectrum, or press Enter and move with the arrow keys."
         onClick={handleClick}
         onKeyDown={handleKey}
         className="relative aspect-square w-full cursor-crosshair overflow-hidden rounded-panel bg-[#d6dce1] shadow-plate"

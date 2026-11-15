@@ -57,7 +57,7 @@ TypeScript, Next.js, React and Tailwind CSS for the web tool, hosted on Vercel. 
 
 ## Use of Super Intelligence (SI)
 
-Yes. Claude (Anthropic) was used as a coding assistant to write and review the code, and to draft the README, this description and the demo slides. This is stated in the repository README and on the last demo slide. The mover detector is a machine-learning model trained for this project on SPHEREx data, as described above. No SI-generated images, video or audio are used; every image in the tool and the slides is real SPHEREx data or a screenshot of the tool.
+Built by Tarun Yadgirkar + Claude (Anthropic). On the form, tick every SI option that applies except Ideation or Brainstorming.
 
 ## NASA Data
 
@@ -72,4 +72,4 @@ Yes. Claude (Anthropic) was used as a coding assistant to write and review the c
 - CDS Sesame name resolver and SIMBAD (Strasbourg Astronomical Data Centre), for turning object names into coordinates.
 - Open-source software: Next.js, React, Tailwind CSS, Phosphor Icons, NumPy, Astropy, SciPy, aiohttp, PyTorch, uv, pnpm.
 - Fonts: Bricolage Grotesque, IBM Plex Sans, IBM Plex Mono (SIL Open Font License).
-- Code written with assistance from Claude (Anthropic).
+- Claude (Anthropic).

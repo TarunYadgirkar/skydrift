@@ -101,9 +101,7 @@ cd ../web && pnpm install && pnpm dev
 
 Training and validation: `make_fields`, `train` and `validate` in `pipeline/src/spherex_pipeline`.
 
-## Use of AI
-
-Claude (Anthropic) was used as a coding assistant to write and review the code in this repository, and to draft this README. The mover detector is a machine-learning model trained for this project on SPHEREx data, as described above. No AI-generated images, video or audio are used.
+Built by Tarun Yadgirkar + Claude (Anthropic).
 
 ## Limits
 

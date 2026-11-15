@@ -306,6 +306,7 @@ export function Workbench() {
           <MoversPanel
             report={movers}
             note={moversNote}
+            compared={passRange ? [epochLabels[passRange[0]], epochLabels[passRange[1]]] : null}
             selectedId={selectedMover}
             onSelect={(candidate) => {
               setSelectedMover(candidate.id);

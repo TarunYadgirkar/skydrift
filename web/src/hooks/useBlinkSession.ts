@@ -79,7 +79,7 @@ export function useBlinkSession() {
       } catch (error) {
         if (signal.aborted) return;
         console.error(error);
-        update({ status: "error", error: error instanceof Error ? error.message : "Something went wrong. Try again." });
+        update({ status: "error", error: error instanceof Error ? error.message : "Unable to load this target. Try again." });
         return;
       }
       for (const band of BANDS) {

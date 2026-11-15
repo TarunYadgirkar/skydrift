@@ -33,11 +33,11 @@ export function EpochStrip({ epochs, labels, available, current, playing, onSele
                 aria-current={selected ? "step" : undefined}
                 onClick={() => onSelect(epoch)}
                 title={`${exposureCount} exposures across all bands`}
-                className={`flex min-h-11 w-full min-w-20 flex-col items-start justify-center rounded-control px-2.5 text-left transition-colors ${
+                className={`flex min-h-11 w-full min-w-24 flex-col items-start justify-center rounded-control px-2.5 text-left transition-colors ${
                   selected ? "bg-ink text-white shadow-sm" : "bg-panel text-ink shadow-panel hover:bg-white"
                 }`}
               >
-                <span className="flex items-center gap-1.5 text-sm font-medium">
+                <span className="flex items-center gap-1.5 whitespace-nowrap text-sm font-medium">
                   <span className="size-2 rounded-full" style={{ background: colorForEpoch(epoch) }} aria-hidden="true" />
                   {labels[epoch]}
                 </span>

@@ -1,12 +1,14 @@
 "use client";
 
-import { ArrowUpRightIcon, CheckCircleIcon, QuestionIcon } from "@phosphor-icons/react";
+import { ArrowUpIcon, CheckCircleIcon, QuestionIcon } from "@phosphor-icons/react";
 import { gaiaSpeedArcsecYr, type MoverCandidate, type MoverReport } from "@/lib/movers";
 import { Panel } from "./ui/controls";
 
 interface MoversPanelProps {
   report: MoverReport | null;
   note: string | null;
+  /** Labels of the two survey passes the detector compared. */
+  compared: [string, string] | null;
   selectedId: string | null;
   onSelect: (candidate: MoverCandidate) => void;
 }
@@ -16,6 +18,16 @@ const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 function direction([east, north]: [number, number]): string {
   const angle = (Math.atan2(east, north) * 180) / Math.PI;
   return COMPASS[Math.round(((angle + 360) % 360) / 45) % 8];
+}
+
+/** The image has north up and east to the left, so the arrow turns counter-clockwise for eastward motion. */
+function arrowRotationDeg([east, north]: [number, number]): number {
+  return (Math.atan2(-east, north) * 180) / Math.PI;
+}
+
+function summary(report: MoverReport, compared: [string, string] | null): string {
+  const count = `${report.sourcesChecked} ${report.sourcesChecked === 1 ? "source" : "sources"} checked`;
+  return compared ? `${count}, ${compared[0]} to ${compared[1]}` : count;
 }
 
 function CatalogPill({ candidate }: { candidate: MoverCandidate }) {
@@ -35,15 +47,15 @@ function CatalogPill({ candidate }: { candidate: MoverCandidate }) {
   );
 }
 
-export function MoversPanel({ report, note, selectedId, onSelect }: MoversPanelProps) {
+export function MoversPanel({ report, note, compared, selectedId, onSelect }: MoversPanelProps) {
   const movers = report?.candidates.filter((candidate) => candidate.isMover) ?? [];
   const ruledOut = report?.candidates.filter((candidate) => candidate.ruledOutByGaia).length ?? 0;
   return (
-    <Panel title="What moved" aside={report ? `${report.sourcesChecked} sources checked over ${report.baselineYears.toFixed(1)} yr` : undefined}>
+    <Panel title="What moved" aside={report ? summary(report, compared) : undefined}>
       {!report ? (
         <p className="text-sm text-muted">{note ?? "Movers are flagged once two survey passes have loaded."}</p>
       ) : movers.length === 0 ? (
-        <p className="text-sm text-muted">Nothing in this field shifted by more than about 1.5″ between the first and last pass.</p>
+        <p className="text-sm text-muted">Nothing in this field shifted by more than about 1.5″ between these two passes.</p>
       ) : (
         <ul className="flex flex-col gap-1.5">
           {movers.map((candidate) => (
@@ -58,7 +70,7 @@ export function MoversPanel({ report, note, selectedId, onSelect }: MoversPanelP
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="flex items-center gap-1.5 font-mono text-sm tabular-nums">
-                    <ArrowUpRightIcon size={14} weight="bold" aria-hidden="true" />
+                    <ArrowUpIcon size={14} weight="bold" aria-hidden="true" style={{ rotate: `${arrowRotationDeg(candidate.motionArcsec)}deg` }} />
                     {candidate.speedArcsecYr.toFixed(1)}″/yr toward {direction(candidate.motionArcsec)}
                   </span>
                   <CatalogPill candidate={candidate} />
